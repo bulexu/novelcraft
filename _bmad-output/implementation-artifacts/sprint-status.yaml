@@ -1,0 +1,133 @@
+# generated: 2026-04-02T16:30:00Z
+# last_updated: 2026-04-02T16:30:00Z
+# project: novelcraft
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: _bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - SM typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
+generated: 2026-04-02T16:30:00Z
+last_updated: 2026-04-02T17:00:00Z
+project: novelcraft
+project_key: NOKEY
+tracking_system: file-system
+story_location: _bmad-output/implementation-artifacts
+
+development_status:
+  # Epic 1: 项目与写作基础
+  epic-1: in-progress
+  1-1-dependency-cleanup-and-project-structure-optimization: backlog
+  1-2-project-list-and-create-function: done
+  1-3-chapter-navigation-and-three-column-layout: backlog
+  1-4-novelpreview-component-implementation: backlog
+  1-5-editor-scrollbar-fix: backlog
+  1-6-immersive-writing-mode: backlog
+  1-7-auto-save-and-shortcut-system: backlog
+  1-8-bottom-status-bar: backlog
+  epic-1-retrospective: optional
+
+  # Epic 2: 角色档案管理
+  epic-2: backlog
+  2-1-character-profile-creation: backlog
+  2-2-personality-trait-recording: backlog
+  2-3-motivation-system-recording: backlog
+  2-4-character-relationship-network-management: backlog
+  2-5-character-arc-recording: backlog
+  2-6-character-card-popup: backlog
+  2-7-character-list-and-search: backlog
+  epic-2-retrospective: optional
+
+  # Epic 3: AI 辅助面板与推演系统
+  epic-3: backlog
+  3-1-ai-panel-component: backlog
+  3-2-character-behavior-inference-input: backlog
+  3-3-multi-factor-weighted-inference-engine: backlog
+  3-4-inference-result-display: backlog
+  3-5-consistency-detection-and-reminder: backlog
+  3-6-continuation-trigger: backlog
+  3-7-writing-state-awareness: backlog
+  3-8-inference-history-and-application: backlog
+  epic-3-retrospective: optional
+
+  # Epic 4: 知识图谱与一致性检查
+  epic-4: backlog
+  4-1-chapter-content-graph-construction: backlog
+  4-2-entity-auto-extraction: backlog
+  4-3-relationship-auto-construction: backlog
+  4-4-realtime-character-consistency-check: backlog
+  4-5-chapter-level-periodic-check: backlog
+  4-6-volume-level-deep-check: backlog
+  4-7-knowledge-graph-visualization: backlog
+  4-8-consistency-warning-panel: backlog
+  epic-4-retrospective: optional
+
+  # Epic 5: 笔风分析与续写辅助
+  epic-5: backlog
+  5-1-content-import-upload: backlog
+  5-2-content-parse-and-chapter-split: backlog
+  5-3-style-six-dimension-analysis: backlog
+  5-4-style-fingerprint-visualization: backlog
+  5-5-character-auto-analysis: backlog
+  5-6-plot-structure-analysis: backlog
+  5-7-style-matched-continuation: backlog
+  5-8-continuation-suggestion-and-foreshadowing-hint: backlog
+  5-9-multi-llm-provider-config: backlog
+  5-10-zustand-state-management-integration: backlog
+  epic-5-retrospective: optional
+
+  # Epic 6: AI 文本检测与风格迁移
+  epic-6: backlog
+  6-1-ai-text-detection-panel: backlog
+  6-2-content-pattern-detection: backlog
+  6-3-language-pattern-detection: backlog
+  6-4-chinese-specific-issue-detection: backlog
+  6-5-ai-trace-comprehensive-scoring: backlog
+  6-6-detection-report-and-suggestion: backlog
+  6-7-style-transfer-selection: backlog
+  6-8-style-transfer-execution: backlog
+  6-9-style-transfer-comparison: backlog
+  epic-6-retrospective: optional
+
+  # Epic 7: 类型写作与创作流程
+  epic-7: backlog
+  7-1-genre-template-selection: backlog
+  7-2-suspense-mystery-mode: backlog
+  7-3-romance-mode: backlog
+  7-4-fantasy-mode: backlog
+  7-5-scifi-mode: backlog
+  7-6-four-stage-creation-process: backlog
+  7-7-stage-one-conception-and-planning: backlog
+  7-8-stage-two-world-building-and-character-shaping: backlog
+  7-9-stage-three-scene-creation: backlog
+  7-10-stage-four-review-and-revision: backlog
+  7-11-version-history-management: backlog
+  7-12-export-function: backlog
+  epic-7-retrospective: optional
