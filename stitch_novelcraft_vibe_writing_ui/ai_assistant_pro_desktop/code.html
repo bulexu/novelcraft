@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#2c2abc",
+              "tertiary-fixed": "#ffdcc5",
+              "secondary-fixed": "#e1e0ff",
+              "on-tertiary-fixed-variant": "#703800",
+              "on-error": "#ffffff",
+              "secondary-fixed-dim": "#c0c1ff",
+              "primary-fixed-dim": "#c0c1ff",
+              "background": "#fcf8ff",
+              "on-secondary-fixed": "#13144b",
+              "on-error-container": "#93000a",
+              "inverse-primary": "#c0c1ff",
+              "on-surface-variant": "#464554",
+              "secondary": "#575992",
+              "secondary-container": "#bdbefe",
+              "tertiary-fixed-dim": "#ffb782",
+              "on-secondary-fixed-variant": "#3f4178",
+              "surface": "#fcf8ff",
+              "surface-variant": "#e4e1ee",
+              "surface-container-highest": "#e4e1ee",
+              "on-tertiary-fixed": "#301400",
+              "surface-container-lowest": "#ffffff",
+              "surface-bright": "#fcf8ff",
+              "on-secondary-container": "#494b83",
+              "tertiary": "#6d3600",
+              "error-container": "#ffdad6",
+              "on-background": "#1b1b24",
+              "surface-dim": "#dbd8e5",
+              "on-primary-container": "#d1d1ff",
+              "on-primary-fixed-variant": "#2e2ebe",
+              "inverse-on-surface": "#f2effc",
+              "on-surface": "#1b1b24",
+              "surface-tint": "#484bd6",
+              "on-tertiary": "#ffffff",
+              "surface-container": "#efecf9",
+              "on-primary-fixed": "#06006c",
+              "surface-container-low": "#f5f2ff",
+              "outline-variant": "#c6c5d7",
+              "inverse-surface": "#302f39",
+              "surface-container-high": "#e9e6f3",
+              "primary-fixed": "#e1e0ff",
+              "outline": "#767586",
+              "error": "#ba1a1a",
+              "on-secondary": "#ffffff",
+              "on-primary": "#ffffff",
+              "primary-container": "#4648d4",
+              "tertiary-container": "#904900",
+              "on-tertiary-container": "#ffcaa6"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(228, 225, 237, 0.8);
+            backdrop-filter: blur(24px);
+        }
+        .editorial-gradient {
+            background: linear-gradient(135deg, #4648d4 0%, #6063ee 100%);
+        }
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: #fcf8ff;
+        }
+    </style>
+</head>
+<body class="flex min-h-screen">
+<!-- Shared SideNavBar -->
+<aside class="w-64 h-screen sticky top-0 left-0 bg-slate-100/80 dark:bg-slate-900/80 backdrop-blur-3xl shadow-[0_0_32px_rgba(27,27,36,0.06)] flex flex-col py-6 border-r border-slate-200/10 font-manrope text-sm tracking-tight">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg editorial-gradient flex items-center justify-center text-white">
+<span class="material-symbols-outlined">auto_fix_high</span>
+</div>
+<div>
+<h1 class="text-lg font-bold tracking-tighter text-[#1b1b24] dark:text-[#f5f2ff]">The Manuscript</h1>
+<p class="text-[10px] uppercase tracking-widest text-[#464554] opacity-70">Zen Editorial Mode</p>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 bg-[#4648d4]/10 text-[#2c2abc] dark:text-[#f5f2ff] rounded-lg border-l-4 border-[#4648d4] transition-transform duration-200 scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined">auto_fix_high</span>
+                Assistant
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#464554] dark:text-[#c6c5d7] hover:bg-slate-200/40 dark:hover:bg-slate-700/40 transition-colors" href="#">
+<span class="material-symbols-outlined">hub</span>
+                Graph
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#464554] dark:text-[#c6c5d7] hover:bg-slate-200/40 dark:hover:bg-slate-700/40 transition-colors" href="#">
+<span class="material-symbols-outlined">fingerprint</span>
+                Fingerprint
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#464554] dark:text-[#c6c5d7] hover:bg-slate-200/40 dark:hover:bg-slate-700/40 transition-colors" href="#">
+<span class="material-symbols-outlined">edit_note</span>
+                Drafts
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#464554] dark:text-[#c6c5d7] hover:bg-slate-200/40 dark:hover:bg-slate-700/40 transition-colors" href="#">
+<span class="material-symbols-outlined">auto_stories</span>
+                Library
+            </a>
+</nav>
+<div class="px-4 mt-auto space-y-1">
+<button class="w-full mb-4 py-3 editorial-gradient text-white rounded-lg font-bold shadow-lg flex items-center justify-center gap-2 transition-transform duration-200 scale-95 active:scale-90">
+<span class="material-symbols-outlined">add</span>
+                New Draft
+            </button>
+<a class="flex items-center gap-3 px-4 py-2 text-[#464554] dark:text-[#c6c5d7] hover:bg-slate-200/40 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+                Settings
+            </a>
+<a class="flex items-center gap-3 px-4 py-2 text-[#464554] dark:text-[#c6c5d7] hover:bg-slate-200/40 transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+                Support
+            </a>
+</div>
+</aside>
+<main class="flex-1 flex flex-col bg-surface-container-high">
+<!-- Shared TopNavBar -->
+<header class="w-full h-14 sticky top-0 z-40 bg-slate-50/50 dark:bg-slate-950/50 backdrop-blur-xl border-b border-slate-200/20 dark:border-slate-800/20 flex justify-between items-center px-8 w-full font-manrope text-xs font-bold uppercase tracking-widest">
+<div class="flex items-center gap-8">
+<a class="text-[#464554] dark:text-[#c6c5d7] hover:text-[#1b1b24] transition-opacity" href="#">Check</a>
+<a class="text-[#464554] dark:text-[#c6c5d7] hover:text-[#1b1b24] transition-opacity" href="#">Continue</a>
+<a class="text-[#464554] dark:text-[#c6c5d7] hover:text-[#1b1b24] transition-opacity" href="#">Analyze</a>
+<a class="text-[#4648d4] dark:text-[#6063ee] border-b-2 border-[#4648d4] pb-1" href="#">Inference</a>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400">search</span>
+<input class="bg-surface-container-highest/50 rounded-full py-1.5 pl-10 pr-4 w-64 focus:outline-none focus:ring-1 ring-[#4648d4]/30 border-none text-[10px]" placeholder="QUERY MANUSCRIPT..." type="text"/>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">history</button>
+</div>
+</header>
+<!-- Main Content Area: AI Assistant Panel -->
+<div class="p-8 max-w-6xl mx-auto w-full">
+<div class="mb-10">
+<h2 class="text-3xl font-extrabold tracking-tight text-on-surface mb-2">Character Inference</h2>
+<p class="text-on-surface-variant text-sm max-w-2xl">Generating deep behavioral mapping and narrative projections based on the psychological profile of your protagonists.</p>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Active Character Profile -->
+<div class="col-span-12 lg:col-span-4 glass-panel rounded-xl p-6 shadow-sm">
+<div class="flex items-center gap-4 mb-6">
+<div class="w-16 h-16 rounded-full bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close-up portrait of a thoughtful young woman with delicate features and expressive eyes, soft atmospheric lighting in a historical setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvmmr8RVCNNm4HpZJljk_3zLFtlktoIbIrw1x4Yn4LNnWJ8xPS8n1ZU-eC4LH8xF8ee0xCV41qP3QIbIwdS5sjeFmD4LSkW37TelkbVYD0Yi_iyEo_3VEt8EfOR8IvqIAvLt44n4lF7z-hgJBFYzX2qHi5uuZ6aV-BxRyB7WuBk4GXYkcr2OuZQba8NSO4n9ODp8zxnivurS3yTt3KOut8EfRzT1kBKFQLKAxRQHlA-2pp1UUyrZHmaaR3m0ascQhfd6LygTM7UZL-"/>
+</div>
+<div>
+<h3 class="text-lg font-bold text-on-surface">Lin Daiyu</h3>
+<span class="label-sm bg-primary/10 text-primary px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">Protagonist</span>
+</div>
+</div>
+<div class="space-y-4">
+<div class="p-3 bg-surface-container-low rounded-lg">
+<label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest block mb-1">Core Archetype</label>
+<p class="text-sm font-medium">The Tragic Intellectual</p>
+</div>
+<div class="p-3 bg-surface-container-low rounded-lg">
+<label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest block mb-1">Dominant Emotion</label>
+<div class="flex items-center gap-2">
+<div class="flex-1 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+<div class="h-full editorial-gradient w-[85%]"></div>
+</div>
+<span class="text-xs font-bold text-primary">Melancholy</span>
+</div>
+</div>
+<div class="pt-4 border-t border-slate-200/10">
+<button class="w-full py-2 text-primary border border-primary/20 rounded-lg text-xs font-bold hover:bg-primary/5 transition-colors">
+                                View Full Profile
+                            </button>
+</div>
+</div>
+</div>
+<!-- Behavioral Mapping (Main Inference) -->
+<div class="col-span-12 lg:col-span-8 glass-panel rounded-xl p-6 shadow-sm">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-sm font-bold text-on-surface uppercase tracking-widest flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+                            Behavioral Mapping
+                        </h3>
+<div class="flex gap-2">
+<button class="p-2 bg-surface-container-low rounded-lg material-symbols-outlined text-sm">refresh</button>
+<button class="p-2 bg-surface-container-low rounded-lg material-symbols-outlined text-sm">tune</button>
+</div>
+</div>
+<div class="space-y-6">
+<!-- AI Insight Card -->
+<div class="p-5 bg-surface-container-low rounded-xl border-l-4 border-primary">
+<p class="text-on-surface text-sm leading-relaxed mb-4">
+                                "In the current scene context (Garden Pavilion), Daiyu's interaction with the jade pendant should trigger a recursive thought loop about her aunt's dismissal. Her internal monologue will likely pivot from external observation to self-referential fragility."
+                            </p>
+<div class="flex gap-3">
+<span class="px-3 py-1 bg-white/50 rounded-full text-[10px] font-bold text-primary">RECURSIVE MEMORY</span>
+<span class="px-3 py-1 bg-white/50 rounded-full text-[10px] font-bold text-primary">FRAGILITY SCAN</span>
+</div>
+</div>
+<!-- Action Vectors -->
+<div class="grid grid-cols-2 gap-4">
+<div class="p-4 bg-surface-container-high/40 rounded-lg">
+<h4 class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-3">Probable Action A</h4>
+<p class="text-xs leading-snug">Writes a short poem on a fallen leaf, then immediately destroys it to prevent discovery.</p>
+<div class="mt-3 flex justify-end">
+<span class="text-[10px] font-bold text-primary">82% PROBABILITY</span>
+</div>
+</div>
+<div class="p-4 bg-surface-container-high/40 rounded-lg">
+<h4 class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-3">Probable Action B</h4>
+<p class="text-xs leading-snug">Withdraws to the library, seeking solace in old manuscripts while ignoring the evening tea summons.</p>
+<div class="mt-3 flex justify-end">
+<span class="text-[10px] font-bold text-[#904900]">18% PROBABILITY</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-8">
+<button class="w-full editorial-gradient py-4 rounded-xl text-white font-bold text-sm flex items-center justify-center gap-3 shadow-xl hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined">auto_fix_high</span>
+                            Generate Draft
+                        </button>
+</div>
+</div>
+<!-- Quick Analysis Sidebar within Grid -->
+<div class="col-span-12 glass-panel rounded-xl p-6 shadow-sm overflow-hidden relative">
+<div class="absolute top-0 right-0 p-8 opacity-10">
+<span class="material-symbols-outlined text-[120px]" style="font-variation-settings: 'wght' 100;">analytics</span>
+</div>
+<div class="relative z-10">
+<h3 class="text-sm font-bold text-on-surface uppercase tracking-widest mb-6">Inference Ecosystem</h3>
+<div class="flex flex-wrap gap-12">
+<div class="flex flex-col">
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Consistency Score</span>
+<span class="text-4xl font-extrabold text-primary">94.8<span class="text-lg">%</span></span>
+</div>
+<div class="flex flex-col border-l border-slate-200 pl-12">
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Sentiment Drift</span>
+<span class="text-4xl font-extrabold text-[#904900]">-2.4<span class="text-lg">%</span></span>
+</div>
+<div class="flex flex-col border-l border-slate-200 pl-12">
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Draft Ready</span>
+<span class="text-4xl font-extrabold text-green-600">YES</span>
+</div>
+<div class="flex-1 flex justify-end items-end pb-1">
+<button class="flex items-center gap-2 text-primary text-xs font-bold hover:underline">
+                                    EXPAND ANALYTICS <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Focus Bead for active interaction simulation -->
+<div class="fixed left-64 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary rounded-r-full shadow-[2px_0_10px_rgba(44,42,188,0.3)]"></div>
+</body></html>

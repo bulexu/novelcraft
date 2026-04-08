@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NovelCraft - Zen Editorial Workspace</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary": "#904900",
+              "on-tertiary-fixed": "#301400",
+              "primary-container": "#6063ee",
+              "on-tertiary-fixed-variant": "#703700",
+              "on-secondary-fixed": "#13144a",
+              "on-primary": "#ffffff",
+              "outline-variant": "#c7c4d7",
+              "on-error": "#ffffff",
+              "secondary": "#575992",
+              "inverse-primary": "#c0c1ff",
+              "outline": "#767586",
+              "on-primary-container": "#fffbff",
+              "on-secondary-container": "#494b83",
+              "on-primary-fixed-variant": "#2f2ebe",
+              "surface": "#fcf8ff",
+              "surface-dim": "#dbd8e4",
+              "on-primary-fixed": "#07006c",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "on-background": "#1b1b23",
+              "surface-variant": "#e4e1ed",
+              "primary-fixed-dim": "#c0c1ff",
+              "on-tertiary-container": "#fffbff",
+              "secondary-fixed": "#e1e0ff",
+              "primary-fixed": "#e1e0ff",
+              "on-error-container": "#93000a",
+              "inverse-on-surface": "#f2effb",
+              "on-secondary-fixed-variant": "#404178",
+              "inverse-surface": "#303038",
+              "surface-container-highest": "#e4e1ed",
+              "tertiary-container": "#b55d00",
+              "surface-container-low": "#f5f2fe",
+              "tertiary-fixed": "#ffdcc5",
+              "background": "#fcf8ff",
+              "on-secondary": "#ffffff",
+              "error-container": "#ffdad6",
+              "surface-bright": "#fcf8ff",
+              "secondary-container": "#bdbefe",
+              "primary": "#4648d4",
+              "on-surface-variant": "#464554",
+              "surface-container": "#efecf8",
+              "secondary-fixed-dim": "#c0c1ff",
+              "surface-tint": "#494bd6",
+              "surface-container-high": "#e9e6f3",
+              "on-surface": "#1b1b23",
+              "tertiary-fixed-dim": "#ffb783",
+              "error": "#ba1a1a"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-card {
+        background: rgba(245, 242, 254, 0.8);
+        backdrop-filter: blur(24px);
+      }
+      .ambient-shadow {
+        box-shadow: 0 12px 40px rgba(27, 27, 35, 0.06);
+      }
+      .primary-gradient {
+        background: linear-gradient(135deg, #4648d4 0%, #6063ee 100%);
+      }
+      .manuscript-sheet {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar Component -->
+<aside class="w-[240px] h-screen fixed left-0 top-0 bg-[#f5f2fe] dark:bg-slate-900 flex flex-col py-8 px-4 z-50">
+<div class="mb-12 px-2">
+<h1 class="text-xl font-bold text-[#1b1b23] dark:text-slate-100 font-headline leading-tight">NovelCraft</h1>
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold">Zen Editorial</p>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Active Tab: Dashboard -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#6366f1] dark:text-[#818cf8] font-bold font-manrope text-sm hover:bg-[#efecf8] dark:hover:bg-slate-800 transition-colors scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#464554] dark:text-slate-400 font-manrope text-sm hover:bg-[#efecf8] dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+                Projects
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#464554] dark:text-slate-400 font-manrope text-sm hover:bg-[#efecf8] dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+                Characters
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#464554] dark:text-slate-400 font-manrope text-sm hover:bg-[#efecf8] dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                Settings
+            </a>
+</nav>
+<div class="mt-auto px-2">
+<button class="primary-gradient w-full py-3 rounded-lg text-white font-headline text-sm font-bold flex items-center justify-center gap-2 ambient-shadow hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-sm" data-icon="add" style="font-variation-settings: 'FILL' 0, 'wght' 700;">add</span>
+                New Chapter
+            </button>
+<div class="mt-8 flex items-center gap-3 px-2">
+<img alt="User profile" class="w-8 h-8 rounded-full bg-surface-variant" data-alt="close-up minimalist portrait of a writer in a soft-lit studio, high-end editorial photography style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuANjS7KSkW8ASO2XwJLWmwWrpOUVEiw1dS25OJbRY5wm6Yo-j4uKrNaOm2mYCaiiaxd66IhagUfIedl82chYLD0UYjNmOHa9h_bSkQSMbHa_F6lCyTbkDeIVdXMsLddZBODMoqhDYibVpHMbljK3snycu5Zwah6lJRjQ7LwZNA6I4cpHYgLgcDzOE-bf82svKEZbR8AovDI3GKt4c-836JNxNpifbBy0CHVb4yeqhWy-GV_ga3QWbofqNaRrrnJWCOqrQ7eRDdG-0qS"/>
+<div class="overflow-hidden">
+<p class="text-xs font-bold truncate">Alex Chen</p>
+<p class="text-[10px] text-on-surface-variant">Pro Plan</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopNavBar Component -->
+<header class="h-16 fixed top-0 right-0 left-[240px] bg-[#fcf8ff] dark:bg-slate-950 flex items-center justify-between px-8 z-40">
+<div class="flex items-center gap-4 w-1/3">
+<div class="relative w-full max-w-md group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm" data-icon="search">search</span>
+<input class="w-full bg-surface-container-low border-transparent focus:border-outline-variant/20 focus:ring-0 rounded-lg pl-10 pr-4 py-2 text-sm font-manrope placeholder:text-outline transition-all" placeholder="Search manuscripts..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="primary-gradient px-6 py-2 rounded-lg text-white font-headline text-sm font-bold hover:opacity-80 transition-opacity active:scale-98">
+                New Project
+            </button>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<button class="hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-[240px] pt-16 min-h-screen">
+<div class="max-w-6xl mx-auto px-12 py-12">
+<!-- Hero / Greeting Section -->
+<section class="mb-12">
+<h2 class="text-4xl font-headline font-extrabold text-on-background mb-2 tracking-tight">My Projects</h2>
+<p class="text-on-surface-variant font-body">Welcome back. The ink is fresh and the screen is ready.</p>
+</section>
+<!-- Projects Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Project Card 1 -->
+<div class="group bg-surface-container-lowest rounded-xl p-6 ambient-shadow border border-transparent hover:border-outline-variant/20 transition-all cursor-pointer">
+<div class="h-48 w-full bg-surface-container rounded-lg mb-6 overflow-hidden relative">
+<img alt="Sovereign of the Sky cover" class="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500" data-alt="abstract minimalist illustration of a floating palace in golden clouds, high contrast cinematic lighting, zen aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSEhB8PA28GbT4OGD7TvLnD-CVoGBmOHUXZSrGqRms8_ztjj9VVCkjqYjZt2y6Ah__4LFsSolXKON0OgHLXhLmjexKKNHxy2feZ2SRM2sLgPu4xfPZOyWcuwp3o-9DlzEmONiRWiMsCvz7HhyTyIeh7QE6I9eS9Xiam5p1bDyUY0sAiaDRFAKzvPhrEn4Uo6D-hesPHkK37kF4SLcWZUw0ITLK9S285dAM-44rjNbZCCaasjQJvmfwd_53hX5D_KY_npWgnGHHY9-S"/>
+<div class="absolute top-4 left-4">
+<span class="bg-surface-container-low/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold text-primary tracking-wider uppercase">In Progress</span>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-start">
+<h3 class="text-xl font-headline font-bold leading-tight group-hover:text-primary transition-colors">Sovereign of the Sky</h3>
+<span class="material-symbols-outlined text-outline text-lg" data-icon="more_vert">more_vert</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 bg-surface-container text-on-surface-variant text-[10px] font-semibold rounded">Wuxia</span>
+<span class="text-[10px] text-outline font-medium">Last edited 2h ago</span>
+</div>
+<div class="pt-4 flex items-center justify-between border-t border-surface-variant/50">
+<div class="flex flex-col">
+<span class="text-xs font-bold">42,000</span>
+<span class="text-[9px] uppercase text-outline tracking-widest font-bold">Words</span>
+</div>
+<div class="h-1 w-24 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[65%] rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Project Card 2 -->
+<div class="group bg-surface-container-lowest rounded-xl p-6 ambient-shadow border border-transparent hover:border-outline-variant/20 transition-all cursor-pointer">
+<div class="h-48 w-full bg-surface-container rounded-lg mb-6 overflow-hidden relative">
+<img alt="After Neon Rain cover" class="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500" data-alt="neon-lit city street at night under heavy rain, moody purple and indigo tones, futuristic cyberpunk atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvf3Q9-9Av1zW1ZgZQIKLb2XTVsgcF6C9fwfzczujAjRclwUh6UF9hWVYQRSOttZOusxJTPVZq8aDJfCGj1O28LSxMIAP126n-4zHRGF_W02p8TcKyFz0DmiKlhx-bvXWmwfFIGkrtCPkG_-TG_p1unsp43vijKxg-QjMzQOupzULxDG-ImNuzYh9GfQxCps-lcfIES9Y5l3dKtluE7vDYOPkUTaN8o8fUllgP3rDZnhsr5Hy-Ty6ObApTm9NhFZpF4M02J7SwHxen"/>
+<div class="absolute top-4 left-4">
+<span class="bg-surface-container-low/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold text-primary tracking-wider uppercase">In Progress</span>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-start">
+<h3 class="text-xl font-headline font-bold leading-tight group-hover:text-primary transition-colors">After Neon Rain</h3>
+<span class="material-symbols-outlined text-outline text-lg" data-icon="more_vert">more_vert</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 bg-surface-container text-on-surface-variant text-[10px] font-semibold rounded">Sci-Fi</span>
+<span class="text-[10px] text-outline font-medium">Last edited Yesterday</span>
+</div>
+<div class="pt-4 flex items-center justify-between border-t border-surface-variant/50">
+<div class="flex flex-col">
+<span class="text-xs font-bold">12,500</span>
+<span class="text-[9px] uppercase text-outline tracking-widest font-bold">Words</span>
+</div>
+<div class="h-1 w-24 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[15%] rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Project Card 3 -->
+<div class="group bg-surface-container-lowest rounded-xl p-6 ambient-shadow border border-transparent hover:border-outline-variant/20 transition-all cursor-pointer">
+<div class="h-48 w-full bg-surface-container rounded-lg mb-6 overflow-hidden relative">
+<img alt="Sword of Qingzhou cover" class="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500" data-alt="ancient chinese sword resting on a weathered stone bridge over a quiet stream, soft mountain mist background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCLsa5at0lFWOeKoPq42eY-F5gTTrAfok90qFKd66n-jC8vTHSpUDhHGiFYHJbYuHj8yA38oi6jKDJeCl89J9EoeABRxzRxjWBSfXgjM0rnY-x_urtZW9Xm2NG5aZCHfNuNr-TCXaX-1MFYRfYrgGb8nRcKgSBghMnMFrMel49ghFlw4Xt3ZzPtihbI5DkYrkuq2QMlgj1NHHknHBDAs6urzcCBHSHiZ-L41Hg_Bmlgsryg9p4uHW_fWh8A-tXnXOgTsDE_Dby-E7l"/>
+<div class="absolute top-4 left-4">
+<span class="bg-primary/10 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold text-primary tracking-wider uppercase">Completed</span>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-start">
+<h3 class="text-xl font-headline font-bold leading-tight group-hover:text-primary transition-colors">Sword of Qingzhou</h3>
+<span class="material-symbols-outlined text-outline text-lg" data-icon="more_vert">more_vert</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 bg-surface-container text-on-surface-variant text-[10px] font-semibold rounded">Fantasy</span>
+<span class="text-[10px] text-outline font-medium">Last edited Oct 12</span>
+</div>
+<div class="pt-4 flex items-center justify-between border-t border-surface-variant/50">
+<div class="flex flex-col">
+<span class="text-xs font-bold">185,000</span>
+<span class="text-[9px] uppercase text-outline tracking-widest font-bold">Words</span>
+</div>
+<div class="h-1 w-24 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[100%] rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- AI Insight Section (Asymmetric Editorial Element) -->
+<section class="mt-24 grid grid-cols-12 gap-12 items-center">
+<div class="col-span-12 lg:col-span-5 order-2 lg:order-1">
+<div class="glass-card p-10 rounded-2xl ambient-shadow">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-tertiary" data-icon="auto_awesome" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<h4 class="font-headline font-bold text-tertiary uppercase tracking-tighter text-sm">Zen Editorial Assistant</h4>
+</div>
+<p class="text-lg font-headline leading-relaxed mb-6 italic">"Based on your recent chapters in 'Sovereign of the Sky', the pacing suggests a major conflict climax is approaching. Would you like to map the character motivations for the next three scenes?"</p>
+<button class="text-primary font-bold text-sm flex items-center gap-2 group">
+                            Explore AI Suggestions 
+                            <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-7 order-1 lg:order-2">
+<div class="relative h-[300px] rounded-2xl overflow-hidden ambient-shadow">
+<img alt="Writing Inspiration" class="w-full h-full object-cover" data-alt="close-up of fountain pen ink swirling in water, ethereal indigo and white patterns, cinematic macro photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSoX9vH9ZwEqjb4sO8ZwJ1uj-DBP9m9_Wmp1d99vG9f57_nstFR74JE9AdrayuzCibldO3RZUZfcSef7urIbKvhy_xPpURrFxMaf-7p8rHN0-3yRfcytsFbtDUKSRz3HkWoRDzNmaOrBZ6WvG8rJsvPCLpeOD6D22ewfi0XlHEbUwHA-Ud2Z33n_qqg37a8elvd_82fXc8LxyQgdIZI4LMxrvsTqKmXJCXHK0LrY_2AhX85V0HDOEmrCy4EF4l2fN7VB5QnEAjlMJ6"/>
+<div class="absolute inset-0 bg-gradient-to-r from-surface via-transparent to-transparent"></div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- The Focus Bead (Floating Action Button Replacement) -->
+<button class="fixed bottom-10 right-10 w-14 h-14 primary-gradient text-white rounded-full flex items-center justify-center ambient-shadow transition-transform hover:scale-110 active:scale-90 z-50">
+<span class="material-symbols-outlined text-2xl" data-icon="edit" style="font-variation-settings: 'FILL' 1;">edit</span>
+</button>
+</body></html>

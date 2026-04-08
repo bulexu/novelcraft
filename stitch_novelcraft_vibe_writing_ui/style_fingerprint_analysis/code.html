@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>笔风指纹分析 - Style Fingerprint</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface": "#fcf8ff",
+              "outline-variant": "#c6c5d7",
+              "on-surface": "#1b1b24",
+              "primary-fixed-dim": "#c0c1ff",
+              "on-secondary-container": "#494b83",
+              "surface-variant": "#e4e1ee",
+              "tertiary-fixed-dim": "#ffb782",
+              "surface-dim": "#dbd8e5",
+              "surface-container-lowest": "#ffffff",
+              "primary": "#2c2abc",
+              "surface-tint": "#484bd6",
+              "outline": "#767586",
+              "primary-container": "#4648d4",
+              "primary-fixed": "#e1e0ff",
+              "on-tertiary-fixed": "#301400",
+              "on-primary-fixed": "#06006c",
+              "inverse-surface": "#302f39",
+              "secondary": "#575992",
+              "inverse-on-surface": "#f2effc",
+              "error": "#ba1a1a",
+              "surface-container-highest": "#e4e1ee",
+              "on-tertiary": "#ffffff",
+              "on-surface-variant": "#464554",
+              "on-secondary": "#ffffff",
+              "on-primary-fixed-variant": "#2e2ebe",
+              "error-container": "#ffdad6",
+              "background": "#fcf8ff",
+              "on-primary-container": "#d1d1ff",
+              "surface-container": "#efecf9",
+              "on-tertiary-container": "#ffcaa6",
+              "secondary-container": "#bdbefe",
+              "surface-container-high": "#e9e6f3",
+              "on-error": "#ffffff",
+              "tertiary-fixed": "#ffdcc5",
+              "on-secondary-fixed": "#13144b",
+              "surface-bright": "#fcf8ff",
+              "tertiary-container": "#904900",
+              "on-background": "#1b1b24",
+              "on-secondary-fixed-variant": "#3f4178",
+              "tertiary": "#6d3600",
+              "secondary-fixed": "#e1e0ff",
+              "surface-container-low": "#f5f2ff",
+              "secondary-fixed-dim": "#c0c1ff",
+              "on-tertiary-fixed-variant": "#703800",
+              "inverse-primary": "#c0c1ff",
+              "on-error-container": "#93000a",
+              "on-primary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(228, 225, 238, 0.8);
+            backdrop-filter: blur(24px);
+        }
+        .radar-grid {
+            stroke: #c6c5d7;
+            stroke-width: 1;
+            fill: none;
+        }
+        .gradient-button {
+            background: linear-gradient(135deg, #4648d4 0%, #6063ee 100%);
+        }
+        body { font-family: 'Manrope', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Top Navigation Shell -->
+<header class="bg-[#e4e1ed]/80 backdrop-blur-3xl flex justify-between items-center px-4 py-3 w-full sticky top-0 z-50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#4648d4] dark:text-[#6063ee]" style="font-variation-settings: 'FILL' 1;">fingerprint</span>
+<span class="text-lg font-bold text-[#1b1b24] dark:text-[#f5f2ff]">Style Fingerprint</span>
+</div>
+<div class="flex items-center gap-6">
+<nav class="hidden md:flex gap-4">
+<a class="text-[#2c2abc] font-bold text-sm tracking-tight hover:opacity-80 transition-opacity" href="#">Analyze</a>
+<a class="text-[#464554] font-bold text-sm tracking-tight hover:opacity-80 transition-opacity" href="#">Archive</a>
+<a class="text-[#464554] font-bold text-sm tracking-tight hover:opacity-80 transition-opacity" href="#">Settings</a>
+</nav>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#464554]">search</span>
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="text-xs font-bold text-on-secondary-container">JS</span>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-6xl mx-auto p-6 pb-24">
+<!-- Hero Section -->
+<div class="mb-10">
+<h1 class="text-3xl font-extrabold tracking-tight mb-1 text-on-surface">笔风指纹分析</h1>
+<p class="text-sm font-label text-on-surface-variant tracking-wider uppercase">分析范围: 第1-15章</p>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Radar Chart: Style Dimensions (Large Anchor) -->
+<div class="md:col-span-7 lg:col-span-8 bg-surface-container-lowest rounded-xl p-8 flex flex-col items-center justify-center relative overflow-hidden">
+<div class="absolute top-6 left-8">
+<h2 class="text-xl font-bold tracking-tight">风格维度图谱</h2>
+<p class="text-xs text-on-surface-variant">Style Dimension Spectrum</p>
+</div>
+<div class="w-full max-w-md aspect-square mt-8 relative">
+<!-- Custom SVG Radar Chart Simulation -->
+<svg class="w-full h-full" viewbox="0 0 200 200">
+<!-- Pentagon Grid -->
+<polygon class="radar-grid" opacity="0.3" points="100,20 176,75 147,165 53,165 24,75"></polygon>
+<polygon class="radar-grid" opacity="0.5" points="100,50 145,83 128,138 72,138 55,83"></polygon>
+<polygon class="radar-grid" opacity="0.8" points="100,80 115,91 109,110 91,110 85,91"></polygon>
+<!-- Axis Lines -->
+<line class="radar-grid" x1="100" x2="100" y1="100" y2="20"></line>
+<line class="radar-grid" x1="100" x2="176" y1="100" y2="75"></line>
+<line class="radar-grid" x1="100" x2="147" y1="100" y2="165"></line>
+<line class="radar-grid" x1="100" x2="53" y1="100" y2="165"></line>
+<line class="radar-grid" x1="100" x2="24" y1="100" y2="75"></line>
+<!-- Data Area (Primary Color #4648d4) -->
+<polygon fill="#4648d4" fill-opacity="0.25" points="100,45 155,75 140,140 70,150 45,85" stroke="#4648d4" stroke-width="2"></polygon>
+<!-- Labels -->
+<text class="fill-on-surface-variant font-bold" font-size="8" text-anchor="middle" x="100" y="15">叙事节奏</text>
+<text class="fill-on-surface-variant font-bold" font-size="8" text-anchor="start" x="185" y="75">情感密度</text>
+<text class="fill-on-surface-variant font-bold" font-size="8" text-anchor="middle" x="155" y="175">意象丰富度</text>
+<text class="fill-on-surface-variant font-bold" font-size="8" text-anchor="middle" x="45" y="175">对话比例</text>
+<text class="fill-on-surface-variant font-bold" font-size="8" text-anchor="end" x="15" y="75">描写细腻度</text>
+</svg>
+</div>
+</div>
+<!-- Vocabulary Word Cloud -->
+<div class="md:col-span-5 lg:col-span-4 glass-card rounded-xl p-6 flex flex-col gap-4">
+<div>
+<h2 class="text-lg font-bold tracking-tight">核心词云</h2>
+<p class="text-xs text-on-surface-variant">Signature Vocabulary</p>
+</div>
+<div class="flex flex-wrap gap-2 mt-4 content-start">
+<span class="px-4 py-2 bg-primary-container text-white rounded-full text-xl font-bold">寂静</span>
+<span class="px-3 py-1.5 bg-surface-container-low text-primary rounded-full text-lg font-medium">深渊</span>
+<span class="px-3 py-1 bg-surface-container-low text-on-surface-variant rounded-full text-base">流转</span>
+<span class="px-5 py-3 bg-secondary-container text-on-secondary-container rounded-full text-2xl font-black">剑鸣</span>
+<span class="px-3 py-1.5 bg-surface-container-low text-on-surface-variant rounded-full text-sm uppercase tracking-widest">AESTHETIC</span>
+<span class="px-4 py-2 bg-surface-container-low text-primary rounded-full text-lg font-semibold">浮光</span>
+<span class="px-3 py-1 bg-surface-container-low text-on-surface-variant rounded-full text-sm">苍穹</span>
+<span class="px-3 py-1 bg-tertiary-container text-on-tertiary-container rounded-full text-sm font-bold">破碎</span>
+</div>
+</div>
+<!-- Sentence Structure Section -->
+<div class="md:col-span-6 bg-surface-container-lowest rounded-xl p-6 flex flex-col gap-6">
+<div class="flex justify-between items-start">
+<div>
+<h2 class="text-lg font-bold tracking-tight">句式结构分析</h2>
+<p class="text-xs text-on-surface-variant">Sentence Structure</p>
+</div>
+<div class="text-right">
+<span class="text-2xl font-black text-primary">24</span>
+<span class="text-xs font-bold text-on-surface-variant">平均字数</span>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<div class="space-y-2">
+<div class="flex justify-between text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-widest">
+<span>短句 (0-15字)</span>
+<span>42%</span>
+</div>
+<div class="h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[42%]"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-widest">
+<span>中句 (16-30字)</span>
+<span>35%</span>
+</div>
+<div class="h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[35%]"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-widest">
+<span>长句 (31字+)</span>
+<span>23%</span>
+</div>
+<div class="h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-outline-variant w-[23%]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Style Comparison Section -->
+<div class="md:col-span-6 bg-surface-container-lowest rounded-xl p-6">
+<div class="mb-6">
+<h2 class="text-lg font-bold tracking-tight">名家风格对标</h2>
+<p class="text-xs text-on-surface-variant">Reference: 鲁迅 (Lu Xun)</p>
+</div>
+<div class="space-y-6">
+<div class="grid grid-cols-12 items-center gap-4">
+<span class="col-span-3 text-xs font-bold text-on-surface-variant">简洁度</span>
+<div class="col-span-9 flex items-center gap-2">
+<div class="flex-1 h-3 bg-surface-container rounded-full flex overflow-hidden">
+<div class="h-full bg-primary-container" style="width: 85%"></div>
+</div>
+<span class="text-[10px] font-bold text-primary">YOU</span>
+</div>
+</div>
+<div class="grid grid-cols-12 items-center gap-4">
+<span class="col-span-3 text-xs font-bold text-on-surface-variant">冷峻感</span>
+<div class="col-span-9 flex items-center gap-2">
+<div class="flex-1 h-3 bg-surface-container rounded-full flex overflow-hidden">
+<div class="h-full bg-secondary" style="width: 60%"></div>
+</div>
+<span class="text-[10px] font-bold text-secondary">LUXUN</span>
+</div>
+</div>
+<div class="grid grid-cols-12 items-center gap-4">
+<span class="col-span-3 text-xs font-bold text-on-surface-variant">批判性</span>
+<div class="col-span-9 flex items-center gap-2 relative">
+<div class="flex-1 h-3 bg-surface-container rounded-full relative">
+<div class="absolute left-0 top-0 h-full bg-primary-container" style="width: 40%"></div>
+<div class="absolute left-0 top-0 h-full bg-secondary opacity-30" style="width: 90%"></div>
+</div>
+<span class="text-[10px] font-bold text-on-surface-variant">OVERLAP</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Emotion Distribution Chart -->
+<div class="md:col-span-12 bg-surface-container-high rounded-xl p-6">
+<div class="flex justify-between items-center mb-8">
+<div>
+<h2 class="text-lg font-bold tracking-tight">情感张力曲线</h2>
+<p class="text-xs text-on-surface-variant">Emotional Distribution Across Chapters</p>
+</div>
+<div class="flex gap-4">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<span class="text-[10px] font-bold uppercase">Positive</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+<span class="text-[10px] font-bold uppercase">Negative</span>
+</div>
+</div>
+</div>
+<div class="h-32 w-full flex items-end gap-1">
+<!-- Simulated bar chart for emotional shifts -->
+<div class="flex-1 bg-primary/20 rounded-t-sm h-[30%]"></div>
+<div class="flex-1 bg-primary/40 rounded-t-sm h-[45%]"></div>
+<div class="flex-1 bg-primary/60 rounded-t-sm h-[70%]"></div>
+<div class="flex-1 bg-tertiary/40 rounded-t-sm h-[90%]"></div>
+<div class="flex-1 bg-tertiary/20 rounded-t-sm h-[50%]"></div>
+<div class="flex-1 bg-primary/30 rounded-t-sm h-[35%]"></div>
+<div class="flex-1 bg-primary/80 rounded-t-sm h-[80%]"></div>
+<div class="flex-1 bg-primary/50 rounded-t-sm h-[55%]"></div>
+<div class="flex-1 bg-tertiary/60 rounded-t-sm h-[75%]"></div>
+<div class="flex-1 bg-tertiary/30 rounded-t-sm h-[40%]"></div>
+<div class="flex-1 bg-primary/90 rounded-t-sm h-[95%]"></div>
+<div class="flex-1 bg-primary/40 rounded-t-sm h-[60%]"></div>
+<div class="flex-1 bg-primary/20 rounded-t-sm h-[20%]"></div>
+<div class="flex-1 bg-secondary/40 rounded-t-sm h-[40%]"></div>
+<div class="flex-1 bg-primary/70 rounded-t-sm h-[85%]"></div>
+</div>
+<div class="flex justify-between mt-2 text-[10px] font-bold text-on-surface-variant uppercase">
+<span>Chapter 1</span>
+<span>Chapter 8</span>
+<span>Chapter 15</span>
+</div>
+</div>
+<!-- Key Metrics Cards -->
+<div class="md:col-span-4 bg-surface-container-low rounded-xl p-6 flex items-center justify-between">
+<div>
+<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">独特词汇数</p>
+<p class="text-2xl font-black text-on-surface">4,281</p>
+</div>
+<span class="material-symbols-outlined text-primary-container text-3xl">auto_awesome</span>
+</div>
+<div class="md:col-span-4 bg-surface-container-low rounded-xl p-6 flex items-center justify-between">
+<div>
+<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">风格一致性</p>
+<p class="text-2xl font-black text-on-surface">88%</p>
+</div>
+<div class="w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-pulse"></div>
+</div>
+<div class="md:col-span-4 bg-tertiary-container text-on-tertiary-container rounded-xl p-6 flex flex-col justify-between">
+<div>
+<p class="text-[10px] font-bold uppercase tracking-widest opacity-80">可优化点</p>
+<p class="text-sm font-bold mt-1">第7章描写过于冗长，建议精简环境细节。</p>
+</div>
+<div class="flex justify-end">
+<span class="material-symbols-outlined">trending_up</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Nav Shell -->
+<footer class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-6 pb-6 pt-2 bg-[#e4e1ed]/80 backdrop-blur-3xl shadow-[0px_-4px_32px_rgba(27,27,36,0.06)] rounded-t-lg md:hidden">
+<div class="flex flex-col items-center justify-center text-[#464554] p-2 hover:bg-[#f5f2ff]/50 transition-all">
+<span class="material-symbols-outlined">edit_note</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-[#2c2abc] text-white rounded-lg p-2 scale-90 transition-all duration-300">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">analytics</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#464554] p-2 hover:bg-[#f5f2ff]/50 transition-all">
+<span class="material-symbols-outlined">auto_awesome</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#464554] p-2 hover:bg-[#f5f2ff]/50 transition-all">
+<span class="material-symbols-outlined">settings</span>
+</div>
+</footer>
+</body></html>

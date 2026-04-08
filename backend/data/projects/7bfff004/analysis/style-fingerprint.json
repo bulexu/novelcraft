@@ -1,0 +1,38 @@
+{
+  "projectId": "_template",
+  "createdAt": "2024-01-01T00:00:00Z",
+  "updatedAt": "2024-01-01T00:00:00Z",
+  "confidence": 0.85,
+  "sentencePatterns": {
+    "averageLength": 42.5,
+    "shortSentenceRatio": 0.38,
+    "longSentenceRatio": 0.18,
+    "punctuationPreference": {
+      "comma": 0.45,
+      "period": 0.35,
+      "dash": 0.12,
+      "ellipsis": 0.08
+    }
+  },
+  "vocabularyProfile": {
+    "frequentWords": ["恍然", "竟是", "也就是", "只是", "不过"],
+    "avoidedWords": ["极其", "堪称", "此外", "毋庸置疑", "显而易见"],
+    "colloquialLevel": 0.68,
+    "dialectWords": []
+  },
+  "descriptionStyle": {
+    "sceneDensity": 0.15,
+    "psychologyMethod": "indirect",
+    "dialogueStyle": "short-minimal"
+  },
+  "narrativeRhythm": {
+    "chapterAverageLength": 3200,
+    "pacingSpeed": "medium-fast",
+    "climaxCycle": 3
+  },
+  "perspectiveHabits": {
+    "mainPerspective": "third-limited",
+    "switchFrequency": 2.5,
+    "povCharacters": ["主角", "次主角"]
+  }
+}

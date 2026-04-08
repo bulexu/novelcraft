@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Style Fingerprint",
+  "description": "作者笔风指纹数据结构",
+  "type": "object",
+  "properties": {
+    "projectId": {
+      "type": "string",
+      "description": "项目ID"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "分析置信度"
+    },
+    "sentencePatterns": {
+      "type": "object",
+      "properties": {
+        "averageLength": { "type": "number" },
+        "shortSentenceRatio": { "type": "number" },
+        "longSentenceRatio": { "type": "number" },
+        "punctuationPreference": {
+          "type": "object",
+          "additionalProperties": { "type": "number" }
+        }
+      }
+    },
+    "vocabularyProfile": {
+      "type": "object",
+      "properties": {
+        "frequentWords": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "avoidedWords": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "colloquialLevel": { "type": "number" },
+        "dialectWords": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "descriptionStyle": {
+      "type": "object",
+      "properties": {
+        "sceneDensity": { "type": "number" },
+        "psychologyMethod": { "type": "string" },
+        "dialogueStyle": { "type": "string" }
+      }
+    },
+    "narrativeRhythm": {
+      "type": "object",
+      "properties": {
+        "chapterAverageLength": { "type": "number" },
+        "pacingSpeed": { "type": "string" },
+        "climaxCycle": { "type": "number" }
+      }
+    },
+    "perspectiveHabits": {
+      "type": "object",
+      "properties": {
+        "mainPerspective": { "type": "string" },
+        "switchFrequency": { "type": "number" },
+        "povCharacters": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

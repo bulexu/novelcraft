@@ -37,6 +37,7 @@ import {
 } from '@ant-design/icons';
 import { projectsApi, charactersApi, chaptersApi, contextApi } from '@/lib/api';
 import SimulationPanel from '@/components/simulation/SimulationPanel';
+import { CharacterList, CharacterForm } from '@/components/characters';
 import type { Project, Character, Chapter } from '@/types';
 
 const { TextArea } = Input;
@@ -54,7 +55,6 @@ export default function ProjectPage() {
 
   const [characterModalOpen, setCharacterModalOpen] = useState(false);
   const [editingCharacter, setEditingCharacter] = useState<Character | null>(null);
-  const [characterForm] = Form.useForm();
 
   const [chapterModalOpen, setChapterModalOpen] = useState(false);
   const [chapterForm] = Form.useForm();
@@ -132,42 +132,43 @@ export default function ProjectPage() {
   // Character handlers
   const handleCreateCharacter = () => {
     setEditingCharacter(null);
-    characterForm.resetFields();
     setCharacterModalOpen(true);
   };
 
   const handleEditCharacter = (char: Character) => {
     setEditingCharacter(char);
-    characterForm.setFieldsValue(char);
     setCharacterModalOpen(true);
   };
 
-  const handleSaveCharacter = async (values: any) => {
+  const handleSaveCharacter = async (values: Partial<Character>) => {
     try {
+      if (!values.name) {
+        message.error('角色名称不能为空');
+        return;
+      }
       if (editingCharacter) {
         await charactersApi.update(projectId, editingCharacter.name, values);
         message.success('角色已更新');
       } else {
-        await charactersApi.create(projectId, {
-          name: values.name,
-          appearance: values.appearance,
-          background: values.background,
-          gender: values.gender,
-          age: values.age,
-          arc_type: values.arc_type,
-        });
+        await charactersApi.create(projectId, values);
         message.success('角色创建成功');
       }
       setCharacterModalOpen(false);
+      setEditingCharacter(null);
       loadProjectData();
     } catch (err) {
       message.error('保存失败');
+      throw err; // Re-throw for form handling
     }
   };
 
-  const handleDeleteCharacter = async (name: string) => {
+  const handleDeleteCharacter = async (character: Character) => {
     try {
-      await charactersApi.delete(projectId, name);
+      if (!character.name) {
+        message.error('角色名称无效');
+        return;
+      }
+      await charactersApi.delete(projectId, character.name);
       message.success('角色已删除');
       loadProjectData();
     } catch (err) {
@@ -274,58 +275,13 @@ export default function ProjectPage() {
       key: 'characters',
       label: <span><UserOutlined /> 角色档案</span>,
       children: (
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <span className="text-on-surface-variant">共 {characters.length} 个角色</span>
-            <Button type="primary" icon={<PlusOutlined />} onClick={handleCreateCharacter}>
-              添加角色
-            </Button>
-          </div>
-          <Row gutter={[16, 16]}>
-            {characters.map((char) => (
-              <Col key={char.id} xs={24} sm={12} md={8} lg={6}>
-                <Card
-                  className="h-full"
-                  actions={[
-                    <Tooltip title="编辑" key="edit">
-                      <EditOutlined onClick={() => handleEditCharacter(char)} />
-                    </Tooltip>,
-                    <Popconfirm
-                      key="delete"
-                      title="确定要删除此角色吗？"
-                      onConfirm={() => handleDeleteCharacter(char.name)}
-                    >
-                      <DeleteOutlined className="text-red-500" />
-                    </Popconfirm>,
-                  ]}
-                >
-                  <div className="text-center">
-                    <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-3">
-                      <UserOutlined className="text-2xl text-primary" />
-                    </div>
-                    <h3 className="font-bold text-on-surface">{char.name}</h3>
-                    <Tag color="blue">{char.arc_type || '角色'}</Tag>
-                    <p className="text-sm text-on-surface-variant mt-2 line-clamp-2">
-                      {char.background || char.appearance || '暂无描述'}
-                    </p>
-                  </div>
-                </Card>
-              </Col>
-            ))}
-            <Col xs={24} sm={12} md={8} lg={6}>
-              <Card
-                className="h-full cursor-pointer border-dashed hover:border-primary"
-                styles={{ body: { display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 200 } }}
-                onClick={handleCreateCharacter}
-              >
-                <div className="text-center text-on-surface-variant">
-                  <PlusOutlined className="text-3xl mb-2" />
-                  <p>添加角色</p>
-                </div>
-              </Card>
-            </Col>
-          </Row>
-        </div>
+        <CharacterList
+          projectId={projectId}
+          characters={characters}
+          onAddClick={handleCreateCharacter}
+          onEditClick={handleEditCharacter}
+          onDeleteClick={handleDeleteCharacter}
+        />
       ),
     },
     {
@@ -533,69 +489,17 @@ export default function ProjectPage() {
         </div>
       </aside>
 
-      {/* Character Modal */}
-      <Modal
-        title={editingCharacter ? '编辑角色' : '创建角色'}
+      {/* Character Form Modal */}
+      <CharacterForm
         open={characterModalOpen}
-        onCancel={() => {
+        character={editingCharacter}
+        allCharacters={characters}
+        onClose={() => {
           setCharacterModalOpen(false);
           setEditingCharacter(null);
         }}
-        footer={null}
-      >
-        <Form
-          form={characterForm}
-          layout="vertical"
-          onFinish={handleSaveCharacter}
-        >
-          <Form.Item
-            name="name"
-            label="角色名称"
-            rules={[{ required: true, message: '请输入角色名称' }]}
-          >
-            <Input disabled={!!editingCharacter} placeholder="输入角色名称" />
-          </Form.Item>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item name="gender" label="性别">
-                <Select placeholder="选择性别">
-                  <Select.Option value="男">男</Select.Option>
-                  <Select.Option value="女">女</Select.Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item name="age" label="年龄">
-                <Input type="number" placeholder="年龄" />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Form.Item name="arc_type" label="角色类型">
-            <Select placeholder="选择角色类型">
-              <Select.Option value="主角">主角</Select.Option>
-              <Select.Option value="女主">女主</Select.Option>
-              <Select.Option value="配角">配角</Select.Option>
-              <Select.Option value="反派">反派</Select.Option>
-            </Select>
-          </Form.Item>
-          <Form.Item name="appearance" label="外貌描写">
-            <TextArea rows={2} placeholder="描述角色的外貌特征" />
-          </Form.Item>
-          <Form.Item name="background" label="背景故事">
-            <TextArea rows={3} placeholder="角色的背景故事" />
-          </Form.Item>
-          <Form.Item className="mb-0 text-right">
-            <Space>
-              <Button onClick={() => { setCharacterModalOpen(false); setEditingCharacter(null); }}>
-                取消
-              </Button>
-              <Button type="primary" htmlType="submit">
-                保存
-              </Button>
-            </Space>
-          </Form.Item>
-        </Form>
-      </Modal>
+        onSubmit={handleSaveCharacter}
+      />
 
       {/* Chapter Modal */}
       <Modal

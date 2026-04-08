@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Zen Editorial - Immersive Writing Mode</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@700;800&amp;family=Noto+Serif+SC:wght@400;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-variant": "#e4e1ed",
+              "surface-tint": "#494bd6",
+              "secondary-fixed": "#e1e0ff",
+              "on-surface": "#1b1b23",
+              "primary-container": "#6063ee",
+              "on-background": "#1b1b23",
+              "secondary-fixed-dim": "#c0c1ff",
+              "on-primary-container": "#fffbff",
+              "inverse-on-surface": "#f2effb",
+              "tertiary": "#904900",
+              "tertiary-fixed-dim": "#ffb783",
+              "on-tertiary-fixed": "#301400",
+              "on-tertiary": "#ffffff",
+              "inverse-primary": "#c0c1ff",
+              "on-tertiary-fixed-variant": "#703700",
+              "surface-container-low": "#f5f2fe",
+              "primary-fixed": "#e1e0ff",
+              "on-secondary-fixed": "#13144a",
+              "surface-dim": "#dbd8e4",
+              "on-secondary": "#ffffff",
+              "error-container": "#ffdad6",
+              "error": "#ba1a1a",
+              "on-error-container": "#93000a",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary-container": "#fffbff",
+              "on-secondary-container": "#494b83",
+              "on-primary-fixed-variant": "#2f2ebe",
+              "inverse-surface": "#303038",
+              "on-error": "#ffffff",
+              "tertiary-container": "#b55d00",
+              "tertiary-fixed": "#ffdcc5",
+              "primary-fixed-dim": "#c0c1ff",
+              "secondary-container": "#bdbefe",
+              "primary": "#4648d4",
+              "on-primary-fixed": "#07006c",
+              "on-primary": "#ffffff",
+              "on-surface-variant": "#464554",
+              "on-secondary-fixed-variant": "#404178",
+              "outline": "#767586",
+              "surface": "#fcf8ff",
+              "outline-variant": "#c7c4d7",
+              "surface-container-highest": "#e4e1ed",
+              "surface-container": "#efecf8",
+              "secondary": "#575992",
+              "surface-bright": "#fcf8ff",
+              "background": "#fcf8ff",
+              "surface-container-high": "#e9e6f3"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"],
+              "serif": ["Noto Serif SC", "serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .chinese-paragraph {
+            text-indent: 2em;
+            line-height: 1.8;
+        }
+        ::selection {
+            background-color: #6063ee;
+            color: #ffffff;
+        }
+        /* Custom dark mode override for writing focus as requested */
+        body.immersive-dark {
+            background-color: #1a1a2e;
+            color: #e8e8e8;
+        }
+    </style>
+</head>
+<body class="immersive-dark font-body antialiased min-h-screen flex flex-col items-center selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation (Shell suppressed/hidden until hover as per JSON style_interactions) -->
+<header class="fixed top-0 w-full opacity-0 hover:opacity-100 transition-opacity duration-500 flex justify-between items-center px-8 py-4 w-full z-50 bg-transparent text-indigo-400 font-manrope text-sm tracking-wide">
+<div class="text-lg font-bold text-slate-100">
+            The Zen Editorial
+        </div>
+<div class="flex gap-6 items-center">
+<button class="text-slate-400 hover:text-indigo-500 transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<button class="text-slate-400 hover:text-indigo-500 transition-colors">
+<span class="material-symbols-outlined" data-icon="fullscreen_exit">fullscreen_exit</span>
+</button>
+</div>
+</header>
+<!-- Main Workspace (The "Canvas") -->
+<main class="flex-grow w-full flex justify-center pt-24 pb-32 px-6">
+<div class="max-w-[600px] w-full animate-fade-in">
+<!-- Chapter Title -->
+<h1 class="font-headline text-3xl md:text-4xl font-extrabold mb-12 text-slate-100 tracking-tight">
+                第三章 暗流涌动
+            </h1>
+<!-- Manuscript Area -->
+<div class="font-serif text-[18px] text-slate-200 space-y-8">
+<p class="chinese-paragraph">
+                    雨丝细密地斜织在窗棂上，发出若有若无的沙沙声。在这个静谧得近乎压抑的午后，沈修远独自坐在红木书桌前，手中的狼毫笔尖悬在宣纸上方，迟迟没有落下。浓稠的墨汁在笔尖汇聚，如同一颗黑色的泪珠，映照着阁楼内昏黄的灯火。
+                </p>
+<p class="chinese-paragraph relative group">
+<span class="absolute -left-6 top-1.5 w-2 h-2 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                    楼下的街道传来一阵急促的马蹄声，瞬间打破了雨中的宁静。他眉头微蹙，放下了笔。这种时候，不该有来客。更何况，这马蹄声的节奏如此紊乱，显然并非寻常的出巡。
+                </p>
+<p class="chinese-paragraph">
+                    密函的内容在他脑海中一遍又一遍地回放：“京城有变，速离。”短短六个字，却字字千钧。沈修远深吸一口气，空气中弥漫着陈年墨香与湿冷潮气的混合味道。他知道，这看似平静的南浔古镇，终究也是待不下去了。
+                </p>
+<p class="chinese-paragraph">
+                    他站起身，走到窗边。街角的石桥旁，一个披着斗笠的瘦削身影正冒雨穿过小巷。那人步履匆忙，却在转角处不经意地回了一下头。沈修远的心跳猛然漏了一拍——那是青衣社的标记。
+                </p>
+<p class="chinese-paragraph italic opacity-80">
+                    “暗流已经汇聚成川，而我，正立于洪峰之巅。”
+                </p>
+<!-- Insertion Point Indicator -->
+<p class="chinese-paragraph">
+                    他正准备熄灭灯火，门外却响起了三长两短的扣门声。那是他们约定好的信号，却比预定时间早了整整两个时辰。沈修远的右手缓缓滑向袖底，那里藏着一把寒芒内敛的短匕……
+                    <span class="inline-block w-[2px] h-6 bg-primary-container animate-pulse ml-1 align-middle"></span>
+</p>
+</div>
+</div>
+</main>
+<!-- AI Suggestion Bubble (Minimal Zen Floating Element) -->
+<div class="fixed right-12 top-1/2 -translate-y-1/2 flex flex-col gap-4 opacity-0 hover:opacity-100 transition-opacity duration-700">
+<div class="bg-surface-container-low/80 backdrop-blur-xl p-4 rounded-xl shadow-[0_12px_40px_rgba(27,27,35,0.06)] max-w-[240px] border-none">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="auto_awesome">auto_awesome</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">AI Insight</span>
+</div>
+<p class="text-xs text-on-surface leading-relaxed">
+                建议在此处加强环境描写，以衬托紧张的博弈气氛。
+            </p>
+<div class="mt-3 flex gap-2">
+<button class="bg-primary/10 text-primary text-[10px] px-2 py-1 rounded-full font-medium hover:bg-primary/20 transition-colors">采用建议</button>
+<button class="text-on-surface-variant text-[10px] px-2 py-1 hover:underline transition-all">忽略</button>
+</div>
+</div>
+</div>
+<!-- Bottom Status Bar (Execution of Shared Component BottomNavBar) -->
+<footer class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-6 py-3 bg-slate-900/80 backdrop-blur-xl border-t border-slate-200/10">
+<!-- Word Count (Active State Logic applied based on context) -->
+<div class="flex flex-col items-center justify-center text-indigo-400 transition-colors scale-95 duration-200 cursor-pointer">
+<span class="material-symbols-outlined mb-1" data-icon="edit_note">edit_note</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest font-medium">842 words</span>
+</div>
+<!-- AI Callout / Interaction Info (Inactive style) -->
+<div class="flex flex-col items-center justify-center text-slate-400 transition-colors scale-95 duration-200 cursor-pointer">
+<span class="material-symbols-outlined mb-1" data-icon="keyboard_command_key">keyboard_command_key</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest font-medium">Cmd+Shift+A 呼出AI</span>
+</div>
+<!-- Saved Status (Inactive style) -->
+<div class="flex flex-col items-center justify-center text-slate-400 transition-colors scale-95 duration-200 cursor-pointer">
+<span class="material-symbols-outlined mb-1" data-icon="cloud_done">cloud_done</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest font-medium">Auto-saved</span>
+</div>
+</footer>
+<!-- Visual Floating Quill (As requested in Design System FAB) -->
+<button class="fixed bottom-24 right-10 w-14 h-14 bg-primary-container text-on-primary-container rounded-full flex items-center justify-center shadow-[0_12px_40px_rgba(70,72,212,0.3)] transition-transform hover:scale-110 active:scale-95 group">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+</body></html>

@@ -1,0 +1,11 @@
+session_id: 3907ddaa
+project_id: 30ddc6ba
+messages:
+- role: user
+  content: 请帮我分析一下李明这个角色的性格特点
+- role: assistant
+  content: '[模拟响应] 收到关于项目 "测试小说" 的消息: "请帮我分析一下李明这个角色的性格特点..."
+
+
+    请配置 LLM API 以获得真实响应。'
+saved_at: '2026-04-01T17:45:56.055649'

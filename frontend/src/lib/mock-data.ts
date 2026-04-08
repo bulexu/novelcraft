@@ -104,6 +104,12 @@ export const mockCharacters: Character[] = [
       ],
       language_fingerprint: ['诗词引用', '含蓄表达', '反问句多'],
     },
+    motivation: {
+      goals: ['找到真心相待之人'],
+      obsessions: ['对宝玉的感情'],
+      fears: ['被抛弃', '体弱早逝'],
+      desires: ['被人理解', '与宝玉长相厮守'],
+    },
     behavior_boundary: {
       forbidden_actions: ['不会主动迎合他人', '不会违背自己的心意'],
       exceptions: [{ condition: '对贾宝玉', action: '会展现真实的自己' }],
@@ -135,6 +141,12 @@ export const mockCharacters: Character[] = [
         { description: '厌恶八股科举' },
       ],
       language_fingerprint: ['口语化', '直接表达', '偶有诗词'],
+    },
+    motivation: {
+      goals: ['追求自由', '不被功名束缚'],
+      obsessions: ['对林黛玉的感情'],
+      fears: ['失去自由', '被逼科举'],
+      desires: ['与黛玉在一起', '不被世俗理解'],
     },
     behavior_boundary: {
       forbidden_actions: ['不会强迫他人', '不会追求功名'],

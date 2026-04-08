@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NovelCraft Project Editor</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-variant": "#e4e1ed",
+              "outline-variant": "#c7c4d7",
+              "on-error-container": "#93000a",
+              "on-tertiary-fixed": "#301400",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-fixed-dim": "#ffb783",
+              "secondary": "#575992",
+              "on-tertiary": "#ffffff",
+              "primary-fixed": "#e1e0ff",
+              "on-error": "#ffffff",
+              "on-surface-variant": "#464554",
+              "surface-dim": "#dbd8e4",
+              "on-tertiary-fixed-variant": "#703700",
+              "inverse-primary": "#c0c1ff",
+              "error-container": "#ffdad6",
+              "tertiary": "#904900",
+              "inverse-surface": "#303038",
+              "inverse-on-surface": "#f2effb",
+              "background": "#fcf8ff",
+              "secondary-container": "#bdbefe",
+              "outline": "#767586",
+              "on-primary": "#ffffff",
+              "on-primary-fixed-variant": "#2f2ebe",
+              "on-primary-fixed": "#07006c",
+              "on-background": "#1b1b23",
+              "surface-bright": "#fcf8ff",
+              "secondary-fixed-dim": "#c0c1ff",
+              "on-primary-container": "#fffbff",
+              "tertiary-container": "#b55d00",
+              "primary-container": "#6063ee",
+              "on-secondary-fixed": "#13144a",
+              "on-secondary-container": "#494b83",
+              "surface-tint": "#494bd6",
+              "surface-container-high": "#e9e6f3",
+              "surface": "#fcf8ff",
+              "on-surface": "#1b1b23",
+              "surface-container": "#efecf8",
+              "primary": "#4648d4",
+              "surface-container-highest": "#e4e1ed",
+              "on-tertiary-container": "#fffbff",
+              "on-secondary-fixed-variant": "#404178",
+              "on-secondary": "#ffffff",
+              "error": "#ba1a1a",
+              "tertiary-fixed": "#ffdcc5",
+              "secondary-fixed": "#e1e0ff",
+              "primary-fixed-dim": "#c0c1ff",
+              "surface-container-low": "#f5f2fe"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .ambient-shadow {
+        box-shadow: 0 12px 40px rgba(27, 27, 35, 0.06);
+      }
+      .glass-morphism {
+        background: rgba(245, 242, 254, 0.8);
+        backdrop-filter: blur(24px);
+      }
+      .primary-gradient {
+        background: linear-gradient(135deg, #4648d4 0%, #6063ee 100%);
+      }
+      ::-webkit-scrollbar { width: 6px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: #e4e1ed; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body overflow-hidden">
+<div class="flex h-screen w-full">
+<!-- SideNavBar (Authority: Shared Components JSON) -->
+<aside class="fixed left-0 top-0 h-screen w-[240px] bg-[#f5f2fe] dark:bg-slate-900 flex flex-col py-6 px-4 gap-8 z-30 overflow-y-auto">
+<div class="flex items-center gap-3 px-2">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_stories</span>
+</div>
+<div>
+<h1 class="text-lg font-semibold text-indigo-900 dark:text-indigo-100 font-headline leading-tight">NovelCraft</h1>
+<p class="text-[10px] text-slate-500 font-manrope tracking-widest uppercase">The Silent Sea</p>
+</div>
+</div>
+<nav class="flex flex-col gap-1">
+<button class="flex items-center gap-3 px-3 py-2 text-indigo-700 dark:text-indigo-300 font-bold transition-all duration-200 ease-in-out font-manrope text-xs tracking-wide uppercase rounded-lg">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">book_2</span>
+<span>Manuscript</span>
+</button>
+<button class="flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 hover:bg-indigo-50/50 dark:hover:bg-slate-800 rounded-lg transition-all duration-200 ease-in-out font-manrope text-xs tracking-wide uppercase">
+<span class="material-symbols-outlined">group</span>
+<span>Characters</span>
+</button>
+<button class="flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 hover:bg-indigo-50/50 dark:hover:bg-slate-800 rounded-lg transition-all duration-200 ease-in-out font-manrope text-xs tracking-wide uppercase">
+<span class="material-symbols-outlined">auto_awesome_motion</span>
+<span>World-Building</span>
+</button>
+<button class="flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 hover:bg-indigo-50/50 dark:hover:bg-slate-800 rounded-lg transition-all duration-200 ease-in-out font-manrope text-xs tracking-wide uppercase">
+<span class="material-symbols-outlined">timeline</span>
+<span>Timeline</span>
+</button>
+<button class="flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 hover:bg-indigo-50/50 dark:hover:bg-slate-800 rounded-lg transition-all duration-200 ease-in-out font-manrope text-xs tracking-wide uppercase">
+<span class="material-symbols-outlined">format_list_bulleted</span>
+<span>Outline</span>
+</button>
+</nav>
+<div class="mt-4">
+<p class="text-[10px] font-bold text-on-surface-variant px-3 mb-2 tracking-widest uppercase">Chapters</p>
+<div class="space-y-1">
+<div class="px-3 py-1.5 text-sm text-on-surface-variant hover:bg-white/50 cursor-pointer rounded-md transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-xs">folder</span>
+                        Chapter 1: The Encounter
+                    </div>
+<div class="px-3 py-1.5 text-sm text-primary font-medium bg-white/80 border-l-2 border-primary rounded-md flex items-center gap-2">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">description</span>
+                        Chapter 2: The Whispering Wind
+                    </div>
+<div class="px-3 py-1.5 text-sm text-on-surface-variant hover:bg-white/50 cursor-pointer rounded-md transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-xs">folder</span>
+                        Chapter 3: After Neon Rain
+                    </div>
+</div>
+</div>
+<div class="mt-auto flex flex-col gap-1 border-t border-outline-variant/10 pt-4">
+<button class="flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 hover:bg-indigo-50/50 dark:hover:bg-slate-800 rounded-lg transition-all duration-200 ease-in-out font-manrope text-xs tracking-wide uppercase">
+<span class="material-symbols-outlined">archive</span>
+<span>Archive</span>
+</button>
+<button class="flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 hover:bg-indigo-50/50 dark:hover:bg-slate-800 rounded-lg transition-all duration-200 ease-in-out font-manrope text-xs tracking-wide uppercase">
+<span class="material-symbols-outlined">delete</span>
+<span>Trash</span>
+</button>
+</div>
+</aside>
+<!-- Main Workspace -->
+<main class="ml-[240px] mr-[320px] flex-1 h-screen overflow-y-auto relative scroll-smooth bg-background">
+<!-- Editor Toolbar -->
+<header class="sticky top-0 z-20 w-full h-16 px-8 flex justify-between items-center bg-background/80 backdrop-blur-md">
+<div class="flex items-center gap-4">
+<h2 class="text-on-surface font-headline font-bold text-lg">Chapter 14: The Whispering Wind</h2>
+<span class="h-4 w-px bg-outline-variant/30"></span>
+<span class="text-xs text-on-surface-variant font-medium">1,240 words</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-1.5 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm text-primary">check_circle</span>
+<span>Saved</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">history</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Manuscript Area -->
+<section class="max-w-[800px] mx-auto py-12 px-8 min-h-screen">
+<div class="bg-surface-container-lowest min-h-[1000px] p-16 ambient-shadow rounded-sm relative selection:bg-primary-fixed selection:text-on-primary-fixed">
+<h1 class="text-4xl font-headline font-extrabold text-on-surface mb-12 tracking-tight leading-tight">
+                        Chapter 14: The Whispering Wind
+                    </h1>
+<div class="space-y-8 text-lg leading-[1.8] text-on-surface font-body">
+<p class="relative group">
+<span class="absolute -left-6 top-2 w-2 h-2 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" title="AI Analyzing"></span>
+                            The cityscape of Neo-Beijing didn't just glow; it breathed. Beneath the thousand-watt hum of the commercial district, a softer, more ancient sound began to stir. It was a wind that shouldn't exist in a world controlled by atmospheric scrubbers—a dry, whistling draft that smelled of burnt ozone and cedarwood.
+                        </p>
+<p>
+                            Sovereign adjusted the lapels of his charcoal coat, his eyes darting toward the alleyway where the shadow had first flickered. Beside him, Neon was already tapping at her wrist-comm, her fingers moving in a rhythmic dance that mirrored the flickering holographic displays. 
+                        </p>
+<p class="relative">
+<span class="absolute -left-6 top-2 w-2 h-2 rounded-full bg-primary" title="AI Analyzing"></span>
+                            "The encryption is shifting," Neon whispered, her voice barely audible over the distant roar of a maglev train. "It's not code anymore. It's... frequency. Someone is playing the city like a flute."
+                        </p>
+<p>
+                            Sovereign didn't answer. He was listening to the wind. It spoke of things the data-stream couldn't capture: the forgotten stories of the underground, the silent revolutions being plotted in the gaps between the server towers. The Whispering Wind wasn't a phenomenon; it was a warning.
+                        </p>
+<p class="text-on-surface/40 italic">
+                            Continue writing here...
+                        </p>
+</div>
+<!-- Floating Action Button -->
+<button class="fixed bottom-12 right-[360px] w-14 h-14 rounded-full primary-gradient text-on-primary ambient-shadow hover:scale-105 transition-transform flex items-center justify-center group z-30">
+<span class="material-symbols-outlined text-2xl group-hover:rotate-90 transition-transform">add</span>
+<span class="absolute right-16 bg-surface-container-low px-3 py-1.5 rounded-lg text-xs font-bold text-primary opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap ambient-shadow">New Chapter</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Right Panel (AI Assistant) -->
+<aside class="fixed right-0 top-0 h-screen w-[320px] bg-surface-container flex flex-col z-30 overflow-hidden">
+<!-- AI Header -->
+<div class="px-6 py-6 border-b border-outline-variant/10">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-primary text-xl" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<h3 class="text-sm font-headline font-bold text-on-surface">Novella AI</h3>
+</div>
+<p class="text-[11px] text-on-surface-variant leading-relaxed">Analyzing current draft for tone and character consistency.</p>
+</div>
+<!-- Active Characters Section -->
+<div class="px-6 py-6 border-b border-outline-variant/10">
+<h4 class="text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-4">Active Characters</h4>
+<div class="flex flex-wrap gap-4">
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="relative">
+<img class="w-12 h-12 rounded-full object-cover border-2 border-primary ring-2 ring-primary/20" data-alt="Portrait of a stoic man in a high-collar charcoal coat, dark hair, sharp features, dramatic noir lighting with purple neon reflections" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMONR7HApMZng1GM_6Pcut6xV-EfGCuVtW6k6MPfEyTu-qt1kkEqKQ12O2Cm2VhZHtiJbHJgY9vzrxW3Uv4IJs67vhaZUkTuliYkzp3vc7YrGTG3hxg4Kj_UkWqo6Ja1xkY1sxmXMINJSy0rwqqqdxbAQhiSXRMyN3f-kKpdhAyw-RD6xyoknsp7B0excW6Wq0LekjqXIm0keu1sk0e-XTTmwr87dIZJKApYt8BR6V-rbfB1zAnyKGD0ongyO5pOf3uQGwkSspgQV-"/>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-surface-container"></div>
+</div>
+<span class="text-[10px] font-medium text-on-surface">Sovereign</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="relative">
+<img class="w-12 h-12 rounded-full object-cover border-2 border-transparent hover:border-primary-container transition-colors" data-alt="Cyberpunk woman with short glowing lilac hair, wearing reflective visor and techwear jacket, soft purple ambient lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4eW2h5sr_t7vlHCSROHhQOfSuZGimNoAvyXBLPqpOonO2IuJmIsewaZjJZzE8zuQcqnwSBCKb5BGq6AdtmhTnv8TKsqoGzA1NwhP5VkqOsNqEERuq6MCzSSqGGKahXz6Z3slF-TzhL5qh_xYuXSfq6F7-yoDwWbQnNu4Q5vo9mZzdXN4ZYp6hq5ic8BDdEzGqkc6JKp6v1TvhwUUdWXQrmOmlL1BrNOOWDXXJG1gRMZPgv5m6HZtRznazI3J4qBwvg5xF4sZjuBqw"/>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-surface-container"></div>
+</div>
+<span class="text-[10px] font-medium text-on-surface">Neon</span>
+</div>
+<button class="w-12 h-12 rounded-full border-2 border-dashed border-outline-variant flex items-center justify-center text-outline hover:text-primary hover:border-primary transition-colors">
+<span class="material-symbols-outlined text-xl">person_add</span>
+</button>
+</div>
+</div>
+<!-- AI Suggestions -->
+<div class="flex-1 overflow-y-auto px-6 py-6 space-y-4">
+<h4 class="text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-4">AI Suggestions</h4>
+<div class="bg-surface-container-lowest p-4 rounded-xl ambient-shadow border border-primary/5 hover:border-primary/20 transition-all group cursor-pointer">
+<div class="flex justify-between items-start mb-2">
+<span class="text-[10px] font-bold text-primary uppercase">Sensory Detail</span>
+<span class="material-symbols-outlined text-xs text-outline group-hover:text-primary transition-colors">lightbulb</span>
+</div>
+<p class="text-xs text-on-surface leading-relaxed">
+                        "Consider describing the taste of the air—perhaps a metallic tang that contrasts with the cedarwood scent."
+                    </p>
+<div class="mt-3 flex justify-end gap-2">
+<button class="text-[10px] font-bold text-on-surface-variant hover:text-on-surface px-2 py-1">Dismiss</button>
+<button class="text-[10px] font-bold text-primary px-2 py-1 bg-primary/5 rounded-md">Apply</button>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl ambient-shadow border border-tertiary/5 hover:border-tertiary/20 transition-all group cursor-pointer">
+<div class="flex justify-between items-start mb-2">
+<span class="text-[10px] font-bold text-tertiary uppercase">Writing Tip</span>
+<span class="material-symbols-outlined text-xs text-outline group-hover:text-tertiary transition-colors">edit_note</span>
+</div>
+<p class="text-xs text-on-surface leading-relaxed">
+                        The pacing in the second paragraph feels slightly rushed. Try expanding on Neon's reaction to the encryption shift.
+                    </p>
+</div>
+</div>
+<!-- AI Input -->
+<div class="p-6 bg-surface-container-high/50 backdrop-blur-md">
+<div class="relative">
+<textarea class="w-full bg-surface-container-lowest border-none rounded-xl text-xs focus:ring-2 focus:ring-primary/20 placeholder:text-outline-variant p-4 pr-12 resize-none ambient-shadow" placeholder="Ask Novella AI to help..." rows="2"></textarea>
+<button class="absolute bottom-3 right-3 w-8 h-8 rounded-lg primary-gradient text-on-primary flex items-center justify-center hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-sm">send</span>
+</button>
+</div>
+<div class="mt-3 flex items-center gap-3">
+<button class="flex items-center gap-1 text-[10px] font-medium text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[14px]">auto_fix</span> Rewrite
+                    </button>
+<button class="flex items-center gap-1 text-[10px] font-medium text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[14px]">psychology</span> Brainstorm
+                    </button>
+</div>
+</div>
+</aside>
+</div>
+</body></html>

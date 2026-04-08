@@ -52,8 +52,8 @@ _This document builds collaboratively through step-by-step discovery. Sections a
 | 文件优先 | 人类可编辑 Markdown/YAML | 文件系统作为主数据源 |
 | Git 友好 | 支持版本控制 | 扁平文件结构，无数据库依赖 |
 | AI 原生 | AI 直接读写 | 无 ORM，Prompt 友好格式 |
-| 语义增强 | 知识图谱能力 | Neo4j + Zep 双图谱方案 |
-| 向量检索 | 笔风匹配 | Qdrant 向量数据库 |
+| 语义增强 | 知识图谱能力 | Neo4j + LightRAG 双图谱方案 |
+| 向量检索 | 笔风匹配 | LightRAG 内置向量存储 |
 
 ### Scale & Complexity
 
@@ -197,23 +197,26 @@ class OasisProfileGenerator:
 
 ### ADR-001: MVP 技术栈简化
 
-**状态**: 已确认
+**状态**: 已确认 (2026-04-03 更新)
 
 **背景**: 原计划采用 Neo4j + Qdrant + Zep Cloud 三存储架构，复杂度高，验证周期长。
 
-**决策**: 采用极简 MVP 架构，使用 LightRAG 替代 Zep Cloud，移除 Neo4j/Qdrant。
+**决策**: 采用极简 MVP 架构，使用 LightRAG 替代 Zep Cloud，保留 Neo4j 用于图谱可视化，移除 Qdrant。
 
 **理由**:
 - LightRAG 本地部署，数据隐私有保障
 - 开源免费，无云服务成本
 - 图谱结果可序列化为 JSON，支持 Git 追踪
 - 与 OASIS 引擎原生兼容
+- Neo4j 提供强大的图谱可视化和复杂查询能力
 
 **技术选型**:
 
 | 组件 | 选型 | 理由 |
 |------|------|------|
-| 知识图谱 | LightRAG | 本地、开源、可 Git 追踪 |
+| 知识图谱构建 | LightRAG | 本地、开源、可 Git 追踪 |
+| 图谱存储/可视化 | Neo4j | 强大的 Cypher 查询、可视化支持 |
+| 向量存储 | LightRAG 内置 | 无需 Qdrant |
 | 角色模拟 | OASIS | MiroFish 已验证有效 |
 | 存储 | 文件系统 | 人类可编辑、版本控制 |
 | 后端 | FastAPI | Python 生态兼容 |
@@ -336,7 +339,6 @@ POST /api/v1/continue/           # 续写建议
 
 ```diff
 # MVP 不需要的依赖（移除）
-- neo4j>=5.17.0
 - qdrant-client>=1.7.0
 
 # 保留的核心依赖
@@ -345,6 +347,7 @@ uvicorn[standard]>=0.27.0
 pydantic>=2.5.3
 openai>=1.10.0
 lightrag-hku>=0.0.5
+neo4j>=5.17.0  # 保留用于图谱可视化
 aiofiles>=23.2.1
 pyyaml>=6.0
 ```
@@ -368,7 +371,7 @@ react: 19.2.4
 
 | 需要调整 | 工作量 |
 |----------|--------|
-| 移除 Neo4j/Qdrant 依赖 | 0.5 天 |
+| 移除 Qdrant 依赖（保留 Neo4j） | 0.5 天 |
 | 添加 react-markdown 预览 | 1-2 天 |
 | 修复编辑器滚动条 | 0.5 天 |
 | **总计** | **2-3 天** |
@@ -386,9 +389,10 @@ react: 19.2.4
 | 决策 | 选择 | 来源 |
 |------|------|------|
 | 数据存储 | 文件系统 + LightRAG | ADR-001 |
+| 图谱可视化 | Neo4j | ADR-001 |
 | 后端框架 | FastAPI + Python 3.11+ | 现有代码 |
 | 前端框架 | Next.js 16 + Ant Design 6 | 现有代码 |
-| 知识图谱 | LightRAG（本地） | ADR-001 |
+| 知识图谱构建 | LightRAG（本地） | ADR-001 |
 | 角色模拟 | OASIS | MiroFish 借鉴 |
 | 前端预览 | react-markdown | ADR-002 |
 
@@ -403,7 +407,7 @@ react: 19.2.4
 
 ### Data Architecture
 
-**存储策略：文件优先**
+**存储策略：文件优先 + Neo4j 可视化**
 
 ```
 data/projects/{project-id}/
@@ -412,15 +416,20 @@ data/projects/{project-id}/
 ├── settings/           # 世界设定
 ├── state/              # 运行状态
 └── .lightrag/          # LightRAG 索引
-    ├── graph.json      # 知识图谱
-    └── vectors.npy     # 向量存储
+    ├── graph.json      # 知识图谱 (本地)
+    └── vectors.npy     # 向量存储 (本地)
 ```
 
-**无外部数据库依赖：**
+**Neo4j 用于图谱可视化：**
+- LightRAG 图谱同步到 Neo4j
+- 提供 Cypher 查询能力
+- 前端图谱可视化支持
+
+**无外部数据库依赖（向量）：**
 - ❌ PostgreSQL
 - ❌ MongoDB
-- ❌ Neo4j（LightRAG 内置）
 - ❌ Qdrant（LightRAG 内置）
+- ✅ Neo4j（可视化层）
 - ✅ 文件系统（主存储）
 
 ### Authentication & Security
@@ -1159,7 +1168,7 @@ DATA_DIR=./data
 
 **优先实现事项：**
 
-1. 移除 Neo4j/Qdrant 依赖
+1. 移除 Qdrant 依赖（保留 Neo4j）
 2. 添加 Zustand 状态管理
 3. 实现 NovelPreview 组件
 4. 修复编辑器滚动条

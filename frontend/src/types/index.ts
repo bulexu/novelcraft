@@ -22,6 +22,7 @@ export interface Character {
   appearance: string;
   background: string;
   personality_palette: PersonalityPalette;
+  motivation?: MotivationSystem;
   behavior_boundary: BehaviorBoundary;
   relationships: CharacterRelation[];
   created_at: string | null;
@@ -47,6 +48,13 @@ export interface CharacterRelation {
   relation_type: string;
   temperature: string;
   evolution: string[];
+}
+
+export interface MotivationSystem {
+  goals: string[];        // 目标
+  obsessions: string[];   // 执念
+  fears: string[];         // 恐惧
+  desires: string[];       // 渴望
 }
 
 export interface Chapter {

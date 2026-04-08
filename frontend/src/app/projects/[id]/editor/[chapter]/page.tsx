@@ -1,247 +1,328 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   Button,
-  Input,
   message,
   Spin,
-  Tag,
-  Avatar,
-  Card,
+  Empty,
+  Modal,
+  Input,
+  Tooltip,
 } from 'antd';
 import {
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  EyeOutlined,
+  EyeInvisibleOutlined,
   SaveOutlined,
-  SendOutlined,
-  ThunderboltOutlined,
+  RobotOutlined,
+  EditOutlined,
+  FileTextOutlined,
   CheckCircleOutlined,
+  ExclamationCircleOutlined,
+  LoadingOutlined,
 } from '@ant-design/icons';
-import { chaptersApi, charactersApi, chatApi, styleApi, consistencyApi, inferenceApi } from '@/lib/api';
-import {
-  SideNavBar,
-  AIPanel,
-  AIPanelMode,
-  AIInferenceCard,
-  StatusBar,
-  FloatingQuill,
-  GlassCard,
-  GradientButton,
-  IconButton,
-  FocusParagraph,
-} from '@/components/ui';
-import type { Chapter, Character } from '@/types';
+import { chaptersApi } from '@/lib/api';
+import { ChapterNav } from '@/components/editor/ChapterNav';
+import { NovelEditor } from '@/components/editor/NovelEditor';
+import { NovelPreview } from '@/components/editor/NovelPreview';
+import type { Chapter } from '@/types';
+
+// View modes for small screens
+type ViewMode = 'edit' | 'edit-preview' | 'preview';
 
 export default function EditorPage() {
   const params = useParams();
   const router = useRouter();
   const projectId = params.id as string;
-  const chapterNum = parseInt(params.chapter as string) || 1;
+  const chapterNum = parseInt(params.chapter as string, 10);
 
   // State
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [chapter, setChapter] = useState<Chapter | null>(null);
   const [chapters, setChapters] = useState<Chapter[]>([]);
-  const [characters, setCharacters] = useState<Character[]>([]);
+  const [currentChapter, setCurrentChapter] = useState<Chapter | null>(null);
   const [content, setContent] = useState('');
-  const [title, setTitle] = useState('');
-  const [wordCount, setWordCount] = useState(0);
-  const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [isDirty, setIsDirty] = useState(false);
+  const [saving, setSaving] = useState(false);
 
-  // AI Panel state
-  const [aiMode, setAiMode] = useState<AIPanelMode>('inference');
-  const [aiMessages, setAiMessages] = useState<{ role: string; content: string }[]>([]);
-  const [aiInput, setAiInput] = useState('');
-  const [aiLoading, setAiLoading] = useState(false);
-  const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
-  const [inferenceResult, setInferenceResult] = useState<{
-    prediction: string;
-    impact: string;
-    confidence: number;
-  } | null>(null);
+  // Responsive layout state
+  const [navCollapsed, setNavCollapsed] = useState(false);
+  const [previewVisible, setPreviewVisible] = useState(true);
+  const [isLargeScreen, setIsLargeScreen] = useState(true);
+  const [isMediumScreen, setIsMediumScreen] = useState(false);
 
-  // Immersive mode
-  const [immersive, setImmersive] = useState(false);
+  // View mode for small screens (edit / edit-preview / preview)
+  const [viewMode, setViewMode] = useState<ViewMode>('edit-preview');
 
-  // Load data
+  // Immersive writing mode
+  const [immersiveMode, setImmersiveMode] = useState(false);
+
+  // AI Panel state (user-triggered only)
+  const [aiPanelVisible, setAiPanelVisible] = useState(false);
+
+  // New chapter modal
+  const [newChapterModalOpen, setNewChapterModalOpen] = useState(false);
+  const [newChapterTitle, setNewChapterTitle] = useState('');
+
+  // Ref for save function to avoid stale closure in auto-save effect
+  const handleSaveRef = useRef<((isAutoSave: boolean) => Promise<boolean>) | null>(null);
+
+  // Debounced resize handler
   useEffect(() => {
-    loadData();
+    let resizeTimer: NodeJS.Timeout;
+
+    const checkScreenSize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        const width = window.innerWidth;
+        setIsLargeScreen(width > 1440);
+        setIsMediumScreen(width >= 1024 && width <= 1440);
+
+        if (width < 1024) {
+          setNavCollapsed(true);
+          // Keep current view mode for small screens
+        } else if (width >= 1024 && width <= 1440) {
+          setNavCollapsed(true);
+          setPreviewVisible(true);
+          setViewMode('edit-preview');
+        } else {
+          setNavCollapsed(false);
+          setPreviewVisible(true);
+          setViewMode('edit-preview');
+        }
+      }, 150); // 150ms debounce
+    };
+
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => {
+      clearTimeout(resizeTimer);
+      window.removeEventListener('resize', checkScreenSize);
+    };
+  }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    loadData(controller.signal);
+    return () => controller.abort();
   }, [projectId, chapterNum]);
 
-  useEffect(() => {
-    const count = content.replace(/\s/g, '').length;
-    setWordCount(count);
-  }, [content]);
-
-  const loadData = async () => {
+  const loadData = async (signal?: AbortSignal) => {
     try {
       setLoading(true);
-      const [chapterRes, chaptersRes, charactersRes] = await Promise.all([
-        chaptersApi.get(projectId, chapterNum).catch(() => null),
-        chaptersApi.list(projectId).catch(() => ({ items: [] })),
-        charactersApi.list(projectId).catch(() => ({ items: [] })),
+
+      const [chaptersRes] = await Promise.all([
+        chaptersApi.list(projectId).catch(() => ({ items: [], total: 0, total_words: 0 })),
       ]);
 
-      setChapters(chaptersRes.items || []);
-      setCharacters(charactersRes.items || []);
+      if (signal?.aborted) return;
 
-      if (chapterRes) {
-        setChapter(chapterRes);
-        setContent(chapterRes.content || '');
-        setTitle(chapterRes.title || '');
-        setWordCount(chapterRes.word_count || 0);
-      } else {
-        const newChapter = await chaptersApi.create(projectId, {
-          chapter: chapterNum,
-          title: `第${chapterNum}章`,
-          content: '',
-          characters: [],
-        });
-        setChapter(newChapter);
-        setContent('');
-        setTitle(newChapter.title || '');
+      setChapters(chaptersRes.items || []);
+
+      const chapter = await chaptersApi.get(projectId, chapterNum).catch(() => null);
+      if (signal?.aborted) return;
+
+      if (!chapter) {
+        if (chaptersRes.items && chaptersRes.items.length > 0) {
+          router.replace(`/projects/${projectId}/editor/${chaptersRes.items[0].chapter}`);
+          return;
+        }
+        message.error('章节不存在');
+        router.push(`/projects/${projectId}`);
+        return;
       }
+
+      setCurrentChapter(chapter);
+      setContent(chapter.content || '');
+      setIsDirty(false);
     } catch (err) {
-      message.error('加载失败');
+      if (!signal?.aborted) {
+        message.error('加载失败');
+      }
     } finally {
-      setLoading(false);
+      if (!signal?.aborted) {
+        setLoading(false);
+      }
     }
   };
 
-  // Handlers
-  const handleSave = async () => {
-    if (!chapter) return;
+  // Auto-save effect with 30s debounce - uses ref to avoid stale closure
+  useEffect(() => {
+    if (!isDirty || !currentChapter) return;
+
+    const timer = setTimeout(() => {
+      if (handleSaveRef.current) {
+        handleSaveRef.current(true);
+      }
+    }, 30000);
+
+    return () => clearTimeout(timer);
+  }, [content, isDirty, currentChapter]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isDirty) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [isDirty]);
+
+  const handleSave = useCallback(async (isAutoSave = false): Promise<boolean> => {
+    if (!currentChapter) return false;
+
+    // Prevent duplicate save requests
+    if (saving) return false;
+
     try {
       setSaving(true);
       await chaptersApi.update(projectId, chapterNum, {
-        title,
+        title: currentChapter.title,
         content,
-        word_count: wordCount,
       });
-      setLastSaved(new Date());
-      message.success('保存成功');
+
+      if (!isAutoSave) {
+        message.success('已保存');
+      }
+      setIsDirty(false);
+
+      setCurrentChapter(prev => prev ? { ...prev, content } : null);
+
+      const chaptersRes = await chaptersApi.list(projectId);
+      setChapters(chaptersRes.items || []);
+      return true;
     } catch (err) {
-      message.error('保存失败');
+      // Show error for both auto and manual save
+      message.error(isAutoSave ? '自动保存失败' : '保存失败');
+      console.error('Save failed:', err);
+      return false;
     } finally {
       setSaving(false);
     }
-  };
+  }, [projectId, chapterNum, currentChapter, content, saving]);
 
-  const handleAIContinue = async () => {
-    if (!content.trim()) {
-      message.warning('请先输入一些内容');
+  // Keep ref updated
+  handleSaveRef.current = handleSave;
+
+  // Immersive mode keyboard shortcut (Cmd/Ctrl+Shift+I, Esc)
+  useEffect(() => {
+    const handleImmersiveShortcut = (e: KeyboardEvent) => {
+      // Cmd/Ctrl + Shift + I to toggle immersive mode
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && (e.key === 'I' || e.key === 'i')) {
+        e.preventDefault();
+        setImmersiveMode(prev => !prev);
+      }
+      // Esc to exit immersive mode
+      if (e.key === 'Escape' && immersiveMode) {
+        setImmersiveMode(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleImmersiveShortcut);
+    return () => window.removeEventListener('keydown', handleImmersiveShortcut);
+  }, [immersiveMode]);
+
+  const handleContentChange = useCallback((newContent: string) => {
+    setContent(newContent);
+    setIsDirty(true);
+  }, []);
+
+  const handleChapterSwitch = useCallback(async (targetChapter: number) => {
+    if (targetChapter === chapterNum) return;
+
+    if (isDirty) {
+      const saved = await handleSave(true);
+      if (!saved) {
+        // Save failed - don't navigate, user can decide what to do
+        return;
+      }
+    }
+
+    router.push(`/projects/${projectId}/editor/${targetChapter}`);
+  }, [chapterNum, isDirty, handleSave, projectId, router]);
+
+  // Global shortcuts: Cmd+N (new chapter), Cmd+↑/↓ (chapter navigation)
+  useEffect(() => {
+    const handleGlobalShortcuts = (e: KeyboardEvent) => {
+      // Skip shortcuts when typing in input/textarea
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
+        return;
+      }
+
+      // Skip if currently saving to prevent race conditions
+      if (saving) return;
+
+      // Cmd/Ctrl + N: New chapter dialog
+      if ((e.metaKey || e.ctrlKey) && e.key === 'n') {
+        e.preventDefault();
+        setNewChapterModalOpen(true);
+      }
+
+      // Cmd/Ctrl + ArrowUp/ArrowDown: Chapter navigation
+      if ((e.metaKey || e.ctrlKey) && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
+        e.preventDefault();
+        const currentIndex = chapters.findIndex(c => c.chapter === chapterNum);
+
+        // Skip if current chapter not found in list
+        if (currentIndex === -1) return;
+
+        if (e.key === 'ArrowUp' && currentIndex > 0) {
+          handleChapterSwitch(chapters[currentIndex - 1].chapter);
+        } else if (e.key === 'ArrowDown' && currentIndex < chapters.length - 1) {
+          handleChapterSwitch(chapters[currentIndex + 1].chapter);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleGlobalShortcuts);
+    return () => window.removeEventListener('keydown', handleGlobalShortcuts);
+  }, [chapters, chapterNum, handleChapterSwitch, saving]);
+
+  const handleCreateChapter = useCallback(async () => {
+    if (!newChapterTitle.trim()) {
+      message.error('请输入章节标题');
       return;
     }
-    try {
-      setAiLoading(true);
-      setAiMode('continue');
-      const result = await styleApi.continue(projectId, content, 500);
-      setAiMessages(prev => [...prev, {
-        role: 'assistant',
-        content: result.continued_content,
-      }]);
-    } catch (err) {
-      message.error('续写失败');
-    } finally {
-      setAiLoading(false);
-    }
-  };
-
-  const handleConsistencyCheck = async () => {
-    if (!content.trim()) {
-      message.warning('请先输入一些内容');
-      return;
-    }
-    try {
-      setAiLoading(true);
-      setAiMode('check');
-      const result = await consistencyApi.check(projectId, content, 'all');
-      setAiMessages(prev => [...prev, {
-        role: 'assistant',
-        content: result.result,
-      }]);
-    } catch (err) {
-      message.error('检查失败');
-    } finally {
-      setAiLoading(false);
-    }
-  };
-
-  const handleCharacterInference = async (char: Character) => {
-    setSelectedCharacter(char);
-    setAiMode('inference');
-    if (!content.trim()) return;
 
     try {
-      setAiLoading(true);
-      const result = await inferenceApi.characterBehavior(
-        projectId,
-        char.name,
-        content.slice(-500)
-      );
-      setInferenceResult({
-        prediction: result.inference_result,
-        impact: '基于当前场景和角色性格特征分析',
-        confidence: 85,
-      });
-    } catch (err) {
-      message.error('推演失败');
-    } finally {
-      setAiLoading(false);
-    }
-  };
+      const nextChapter = chapters.length > 0
+        ? Math.max(...chapters.map(c => c.chapter)) + 1
+        : 1;
 
-  const handleChatSend = async () => {
-    if (!aiInput.trim()) return;
-    const userMessage = aiInput;
-    setAiInput('');
-    setAiMessages(prev => [...prev, { role: 'user', content: userMessage }]);
-    setAiLoading(true);
-
-    try {
-      const result = await chatApi.send(projectId, userMessage);
-      setAiMessages(prev => [...prev, { role: 'assistant', content: result.response }]);
-    } catch (err) {
-      setAiMessages(prev => [...prev, {
-        role: 'assistant',
-        content: '抱歉，出现错误：' + (err instanceof Error ? err.message : '未知错误'),
-      }]);
-    } finally {
-      setAiLoading(false);
-    }
-  };
-
-  const handleAddChapter = async () => {
-    try {
-      const newNum = chapters.length > 0 ? Math.max(...chapters.map(c => c.chapter)) + 1 : 1;
       const newChapter = await chaptersApi.create(projectId, {
-        chapter: newNum,
-        title: `第${newNum}章`,
+        chapter: nextChapter,
+        title: newChapterTitle.trim(),
         content: '',
         characters: [],
       });
-      router.push(`/projects/${projectId}/editor/${newNum}`);
+
+      message.success('章节创建成功');
+      setNewChapterModalOpen(false);
+      setNewChapterTitle('');
+
+      const chaptersRes = await chaptersApi.list(projectId);
+      setChapters(chaptersRes.items || []);
+
+      router.push(`/projects/${projectId}/editor/${newChapter.chapter}`);
     } catch (err) {
-      message.error('创建章节失败');
+      message.error('创建失败');
     }
-  };
+  }, [chapters, projectId, newChapterTitle, router]);
 
-  // Navigation items
-  const navItems = [
-    { key: 'manuscript', label: 'Manuscript', icon: 'book_2', active: true },
-    { key: 'characters', label: 'Characters', icon: 'group' },
-    { key: 'world', label: 'World', icon: 'public' },
-    { key: 'timeline', label: 'Timeline', icon: 'timeline' },
-  ];
+  // Compute dynamic class names
+  const asideClassName = `h-screen bg-surface-container-low flex flex-col shrink-0 border-r border-outline-variant/10 transition-all duration-300 ${
+    navCollapsed || immersiveMode ? 'w-0 overflow-hidden' : 'w-[240px]'
+  }`;
 
-  const chapterItems = chapters.map(ch => ({
-    key: `chapter-${ch.chapter}`,
-    label: ch.title || `第${ch.chapter}章`,
-    icon: ch.chapter === chapterNum ? 'description' : 'folder',
-    active: ch.chapter === chapterNum,
-  }));
+  const editorClassName = `flex-1 min-w-0 ${previewVisible && !immersiveMode ? 'border-r border-outline-variant/10' : ''}`;
+
+  const previewClassName = `w-[480px] shrink-0 overflow-hidden ${isMediumScreen ? 'w-[400px]' : ''}`;
 
   if (loading) {
     return (
@@ -251,249 +332,236 @@ export default function EditorPage() {
     );
   }
 
+  if (!currentChapter) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-background">
+        <Empty description="章节不存在" />
+      </div>
+    );
+  }
+
   return (
-    <div className={`flex h-screen overflow-hidden ${immersive ? 'immersive-dark' : 'bg-background'}`}>
-      {/* Left Sidebar - Navigation */}
-      {!immersive && (
-        <SideNavBar
-          projectName="NovelCraft"
-          projectDescription="The Silent Sea"
-          items={navItems}
-          subItems={chapterItems}
-          subItemsTitle="Chapters"
-          onNavClick={(key) => {
-            if (key.startsWith('chapter-')) {
-              const num = key.replace('chapter-', '');
-              router.push(`/projects/${projectId}/editor/${num}`);
-            }
-          }}
-        />
+    <div className={`flex h-screen overflow-hidden transition-all duration-300 ${immersiveMode ? 'bg-surface-container-lowest' : 'bg-background'}`}>
+      {/* Navigation sidebar - hidden in immersive mode */}
+      {!immersiveMode && (
+        <aside className={asideClassName}>
+          <ChapterNav
+            chapters={chapters}
+            currentChapter={chapterNum}
+            projectId={projectId}
+            onChapterSelect={handleChapterSwitch}
+            onCreateChapter={() => setNewChapterModalOpen(true)}
+          />
+        </aside>
       )}
 
-      {/* Main Editor Area */}
-      <main className={`flex-1 flex flex-col min-w-0 h-full overflow-hidden ${
-        immersive ? 'ml-0' : 'ml-[240px]'
-      } ${immersive ? 'mr-0' : 'mr-[320px]'}`}>
-        {/* Toolbar */}
-        {!immersive && (
-          <header className="bg-surface/80 backdrop-blur-xl border-b border-outline-variant/20 px-8 py-3 flex items-center justify-between shrink-0">
-            <div className="flex items-center gap-4 flex-1 min-w-0">
-              <Link href={`/projects/${projectId}`} className="shrink-0">
-                <IconButton icon="arrow_back" variant="subtle" />
-              </Link>
-              <Input
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="text-lg font-bold"
-                variant="borderless"
-                placeholder="章节标题"
-                style={{ fontWeight: 'bold', fontSize: '18px' }}
+      <main className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${immersiveMode ? 'bg-surface-container-lowest items-center' : 'bg-surface'}`}>
+        {/* Header - hidden in immersive mode */}
+        {!immersiveMode && (
+          <header className="flex items-center justify-between px-4 py-2 border-b border-outline-variant/20 bg-surface">
+          <div className="flex items-center gap-2">
+            <Tooltip title={navCollapsed ? '展开导航' : '折叠导航'}>
+              <Button
+                type="text"
+                icon={navCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                onClick={() => setNavCollapsed(!navCollapsed)}
               />
-            </div>
-            <div className="flex items-center gap-3 shrink-0">
-              <Tag color="blue">{wordCount.toLocaleString()} 字</Tag>
-              <IconButton
-                icon={immersive ? 'fullscreen_exit' : 'fullscreen'}
-                onClick={() => setImmersive(!immersive)}
-              />
-              <GradientButton
-                icon={<span className="material-symbols-outlined text-lg">save</span>}
-                onClick={handleSave}
-                loading={saving}
-              >
-                保存
-              </GradientButton>
-            </div>
-          </header>
-        )}
-
-        {/* Immersive Mode Header */}
-        {immersive && (
-          <header className="fixed top-0 w-full opacity-0 hover:opacity-100 transition-opacity duration-500 z-50 flex justify-between items-center px-8 py-4 bg-transparent">
-            <div className="text-lg font-bold text-slate-100">The Zen Editorial</div>
-            <div className="flex gap-4">
-              <IconButton icon="fullscreen_exit" onClick={() => setImmersive(false)} />
-              <GradientButton onClick={handleSave} loading={saving}>保存</GradientButton>
-            </div>
-          </header>
-        )}
-
-        {/* Manuscript Area */}
-        <div className={`flex-1 overflow-y-auto ${immersive ? 'bg-[#1a1a2e]' : 'bg-surface'}`}>
-          <div className={`max-w-[800px] mx-auto py-12 px-8 ${
-            immersive ? 'pt-24' : ''
-          }`}>
-            {immersive ? (
-              // Immersive mode manuscript
-              <div className="font-serif text-[18px] text-slate-200 space-y-8">
-                <h1 className="font-headline text-3xl font-extrabold mb-12 text-slate-100 tracking-tight">
-                  {title}
-                </h1>
-                {content.split('\n\n').map((para, i) => (
-                  <p key={i} className="chinese-paragraph">
-                    {para}
-                  </p>
-                ))}
-                <span className="inline-block w-[2px] h-6 bg-primary-container animate-pulse align-middle" />
-              </div>
-            ) : (
-              // Normal editor
-              <div className="bg-surface-container-lowest min-h-[800px] p-16 ambient-shadow rounded-sm">
-                <textarea
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  className="w-full bg-transparent border-none outline-none resize-none"
-                  placeholder="开始写作..."
-                  style={{
-                    fontFamily: 'Georgia, "Noto Serif SC", serif',
-                    fontSize: '18px',
-                    lineHeight: '2',
-                    color: 'var(--on-surface)',
-                  }}
-                />
-              </div>
+            </Tooltip>
+            <span className="text-on-surface font-bold">
+              第{chapterNum}章：{currentChapter.title}
+            </span>
+            {isDirty && (
+              <span className="text-xs text-on-surface-variant bg-primary/10 px-2 py-0.5 rounded">
+                未保存
+              </span>
             )}
           </div>
+
+          <div className="flex items-center gap-2">
+            {/* View mode toggle - visible on small/medium screens */}
+            {!isLargeScreen && (
+              <div className="flex items-center bg-surface-container rounded p-0.5">
+                <Tooltip title="编辑模式">
+                  <Button
+                    type={viewMode === 'edit' ? 'primary' : 'text'}
+                    size="small"
+                    icon={<EditOutlined />}
+                    onClick={() => setViewMode('edit')}
+                  />
+                </Tooltip>
+                <Tooltip title="编辑+预览">
+                  <Button
+                    type={viewMode === 'edit-preview' ? 'primary' : 'text'}
+                    size="small"
+                    icon={<FileTextOutlined />}
+                    onClick={() => setViewMode('edit-preview')}
+                  />
+                </Tooltip>
+                <Tooltip title="预览模式">
+                  <Button
+                    type={viewMode === 'preview' ? 'primary' : 'text'}
+                    size="small"
+                    icon={<EyeOutlined />}
+                    onClick={() => setViewMode('preview')}
+                  />
+                </Tooltip>
+              </div>
+            )}
+            {/* Preview toggle - only on large screens */}
+            {isLargeScreen && (
+              <Tooltip title={previewVisible ? '隐藏预览' : '显示预览'}>
+                <Button
+                  type="text"
+                  icon={previewVisible ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+                  onClick={() => setPreviewVisible(!previewVisible)}
+                />
+              </Tooltip>
+            )}
+            {/* AI Panel toggle */}
+            <Tooltip title="AI 助手">
+              <Button
+                type="text"
+                icon={<RobotOutlined />}
+                onClick={() => setAiPanelVisible(!aiPanelVisible)}
+                className={aiPanelVisible ? 'text-primary' : ''}
+              />
+            </Tooltip>
+            <Button
+              type="primary"
+              icon={<SaveOutlined />}
+              loading={saving}
+              onClick={() => handleSave(false)}
+              disabled={!isDirty}
+            >
+              保存
+            </Button>
+          </div>
+        </header>
+        )}
+
+        <div className={`flex-1 flex min-h-0 ${immersiveMode ? 'w-full max-w-[600px] justify-center' : ''}`}>
+          {/* Editor - show based on view mode */}
+          {(immersiveMode || isLargeScreen || viewMode === 'edit' || viewMode === 'edit-preview') && (
+            <div className={immersiveMode ? 'w-full h-full' : editorClassName}>
+              <NovelEditor
+                content={content}
+                onChange={handleContentChange}
+                onSave={() => handleSave(false)}
+              />
+            </div>
+          )}
+
+          {/* Preview - hidden in immersive mode */}
+          {!immersiveMode && (isLargeScreen ? previewVisible : viewMode === 'preview' || viewMode === 'edit-preview') && (
+            <aside className={previewClassName}>
+              <NovelPreview content={content} />
+            </aside>
+          )}
         </div>
+
+        {/* Footer - hidden in immersive mode */}
+        {!immersiveMode && (
+          <footer className="flex items-center justify-between px-4 py-1.5 border-t border-outline-variant/20 bg-surface-container-low text-xs text-on-surface-variant">
+            <div className="flex items-center gap-4">
+              <span>字数：{content.length.toLocaleString()}</span>
+              <span>章节：{chapterNum} / {chapters.length || 1}</span>
+              {/* 笔风匹配度 - 笔风分析功能启用后显示 */}
+              {/* {styleMatchScore !== undefined && (
+                <span>笔风：{styleMatchScore}%</span>
+              )} */}
+            </div>
+            <div className="flex items-center gap-2">
+              {saving ? (
+                <>
+                  <LoadingOutlined spin />
+                  <span className="text-primary">保存中...</span>
+                </>
+              ) : isDirty ? (
+                <>
+                  <ExclamationCircleOutlined className="text-amber-500" />
+                  <span>未保存</span>
+                </>
+              ) : (
+                <>
+                  <CheckCircleOutlined className="text-green-600" />
+                  <span className="text-green-600">已保存</span>
+                </>
+              )}
+            </div>
+          </footer>
+        )}
       </main>
 
-      {/* Right AI Panel */}
-      {!immersive && (
-        <div className="fixed right-0 top-0 h-screen w-[320px] z-20">
-          <AIPanel
-            mode={aiMode}
-            onModeChange={setAiMode}
-            onClose={() => {}}
-            width={320}
-          >
-            {/* Character Quick Actions */}
-            <div className="space-y-3 mb-6">
-              <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">
-                角色快速推演
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {characters.slice(0, 4).map((char) => (
-                  <button
-                    key={char.id}
-                    onClick={() => handleCharacterInference(char)}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs transition-all ${
-                      selectedCharacter?.id === char.id
-                        ? 'bg-primary text-white'
-                        : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
-                    }`}
-                  >
-                    <Avatar size="small" className="bg-primary/20 text-primary">
-                      {char.name[0]}
-                    </Avatar>
-                    {char.name}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Inference Result */}
-            {aiMode === 'inference' && selectedCharacter && inferenceResult && (
-              <AIInferenceCard
-                character={selectedCharacter.name}
-                confidence={inferenceResult.confidence}
-                prediction={inferenceResult.prediction}
-                impact={inferenceResult.impact}
-              />
-            )}
-
-            {/* Continue Mode */}
-            {aiMode === 'continue' && (
-              <GlassCard className="mb-4">
-                <p className="text-xs font-bold text-on-surface-variant mb-2">
-                  AI 续写
-                </p>
-                <GradientButton
-                  onClick={handleAIContinue}
-                  loading={aiLoading}
-                  icon={<ThunderboltOutlined />}
-                  block
-                >
-                  生成续写
-                </GradientButton>
-              </GlassCard>
-            )}
-
-            {/* Check Mode */}
-            {aiMode === 'check' && (
-              <GlassCard className="mb-4">
-                <p className="text-xs font-bold text-on-surface-variant mb-2">
-                  一致性检查
-                </p>
-                <GradientButton
-                  onClick={handleConsistencyCheck}
-                  loading={aiLoading}
-                  icon={<CheckCircleOutlined />}
-                  block
-                >
-                  检查当前内容
-                </GradientButton>
-              </GlassCard>
-            )}
-
-            {/* Chat Messages */}
-            {aiMessages.length > 0 && (
-              <div className="space-y-3 mt-4">
-                {aiMessages.map((msg, i) => (
-                  <GlassCard
-                    key={i}
-                    variant={msg.role === 'user' ? 'elevated' : 'default'}
-                    padding="sm"
-                    className={msg.role === 'user' ? 'ml-4' : 'mr-4'}
-                  >
-                    <p className="text-sm leading-relaxed">{msg.content}</p>
-                  </GlassCard>
-                ))}
-                {aiLoading && (
-                  <div className="flex items-center gap-2 text-sm text-on-surface-variant">
-                    <Spin size="small" />
-                    思考中...
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* AI Input */}
-            <div className="mt-4 space-y-2">
-              <Input.TextArea
-                value={aiInput}
-                onChange={(e) => setAiInput(e.target.value)}
-                onPressEnter={(e) => {
-                  if (!e.shiftKey) {
-                    e.preventDefault();
-                    handleChatSend();
-                  }
-                }}
-                placeholder="向 AI 提问..."
-                autoSize={{ minRows: 2, maxRows: 4 }}
-              />
-              <GradientButton
-                onClick={handleChatSend}
-                loading={aiLoading}
-                disabled={!aiInput.trim()}
-                block
-              >
-                发送
-              </GradientButton>
-            </div>
-          </AIPanel>
+      {/* Immersive mode minimal status bar */}
+      {immersiveMode && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 px-6 py-2 bg-black/60 backdrop-blur-md rounded-full text-white/80 text-sm flex items-center gap-4">
+          <span>字数：{content.length.toLocaleString()}</span>
+          <span className="text-white/40">|</span>
+          <span>章节 {chapterNum}/{chapters.length || 1}</span>
+          <span className="text-white/40">|</span>
+          {saving ? (
+            <>
+              <LoadingOutlined spin className="text-white/60" />
+              <span className="text-white/60">保存中...</span>
+            </>
+          ) : isDirty ? (
+            <>
+              <ExclamationCircleOutlined className="text-amber-400" />
+              <span className="text-amber-400">未保存</span>
+            </>
+          ) : (
+            <>
+              <CheckCircleOutlined className="text-green-400" />
+              <span className="text-green-400">已保存</span>
+            </>
+          )}
+          <span className="text-white/40">|</span>
+          <span className="text-white/60">Esc 或 ⌘⇧I 退出</span>
         </div>
       )}
 
-      {/* Status Bar */}
-      <StatusBar
-        wordCount={wordCount}
-        saved={!!lastSaved}
-        savedAt={lastSaved?.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })}
-        dark={immersive}
-      />
+      {/* AI Panel - user-triggered floating panel, hidden in immersive mode */}
+      {aiPanelVisible && !immersiveMode && (
+        <aside className="w-[280px] h-screen glass-panel flex flex-col border-l border-outline-variant/10 shrink-0">
+          <div className="p-4 border-b border-outline-variant/10 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <RobotOutlined className="text-primary" />
+              <span className="font-bold text-on-surface">Novella AI</span>
+            </div>
+            <Button
+              type="text"
+              size="small"
+              onClick={() => setAiPanelVisible(false)}
+            >
+              ✕
+            </Button>
+          </div>
+          <div className="flex-1 overflow-y-auto p-4">
+            <p className="text-sm text-on-surface-variant">
+              AI 辅助功能将在后续版本提供...
+            </p>
+          </div>
+        </aside>
+      )}
 
-      {/* Floating Quill - Add Chapter */}
-      <FloatingQuill onClick={handleAddChapter} />
+      <Modal
+        title="创建新章节"
+        open={newChapterModalOpen}
+        onOk={handleCreateChapter}
+        onCancel={() => {
+          setNewChapterModalOpen(false);
+          setNewChapterTitle('');
+        }}
+        okText="创建"
+        cancelText="取消"
+      >
+        <Input
+          placeholder="输入章节标题"
+          value={newChapterTitle}
+          onChange={(e) => setNewChapterTitle(e.target.value)}
+          onPressEnter={handleCreateChapter}
+        />
+      </Modal>
     </div>
   );
 }

@@ -1,0 +1,60 @@
+{
+  "projectId": "_template",
+  "createdAt": "2024-01-01T00:00:00Z",
+  "updatedAt": "2024-01-01T00:00:00Z",
+  "mainPlot": {
+    "coreConflict": "主角面临的困境描述",
+    "stages": [
+      {
+        "chapters": [1, 5],
+        "description": "发现阶段",
+        "keyEvents": ["事件1", "事件2"]
+      }
+    ],
+    "turningPoints": [
+      {
+        "chapter": 5,
+        "description": "关键转折点"
+      }
+    ]
+  },
+  "subPlots": [
+    {
+      "id": "subplot-1",
+      "name": "支线名称",
+      "status": "ongoing",
+      "chapters": [1, 2, 3],
+      "description": "支线描述"
+    }
+  ],
+  "timeline": [
+    {
+      "chapter": 1,
+      "time": "第1天",
+      "events": [
+        {
+          "description": "事件描述",
+          "characters": ["张三", "李四"],
+          "location": "地点"
+        }
+      ]
+    }
+  ],
+  "foreshadowing": {
+    "pending": [
+      {
+        "id": "fs-1",
+        "chapter": 1,
+        "description": "伏笔内容",
+        "hint": "暗示描述",
+        "expectedResolution": "预期回收章节"
+      }
+    ],
+    "resolved": []
+  },
+  "worldSettings": {
+    "extractedRules": [],
+    "locations": [],
+    "organizations": []
+  }
+}

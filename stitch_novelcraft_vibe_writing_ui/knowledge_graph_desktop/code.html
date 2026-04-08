@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#2c2abc",
+              "tertiary-fixed": "#ffdcc5",
+              "secondary-fixed": "#e1e0ff",
+              "on-tertiary-fixed-variant": "#703800",
+              "on-error": "#ffffff",
+              "secondary-fixed-dim": "#c0c1ff",
+              "primary-fixed-dim": "#c0c1ff",
+              "background": "#fcf8ff",
+              "on-secondary-fixed": "#13144b",
+              "on-error-container": "#93000a",
+              "inverse-primary": "#c0c1ff",
+              "on-surface-variant": "#464554",
+              "secondary": "#575992",
+              "secondary-container": "#bdbefe",
+              "tertiary-fixed-dim": "#ffb782",
+              "on-secondary-fixed-variant": "#3f4178",
+              "surface": "#fcf8ff",
+              "surface-variant": "#e4e1ee",
+              "surface-container-highest": "#e4e1ee",
+              "on-tertiary-fixed": "#301400",
+              "surface-container-lowest": "#ffffff",
+              "surface-bright": "#fcf8ff",
+              "on-secondary-container": "#494b83",
+              "tertiary": "#6d3600",
+              "error-container": "#ffdad6",
+              "on-background": "#1b1b24",
+              "surface-dim": "#dbd8e5",
+              "on-primary-container": "#d1d1ff",
+              "on-primary-fixed-variant": "#2e2ebe",
+              "inverse-on-surface": "#f2effc",
+              "on-surface": "#1b1b24",
+              "surface-tint": "#484bd6",
+              "on-tertiary": "#ffffff",
+              "surface-container": "#efecf9",
+              "on-primary-fixed": "#06006c",
+              "surface-container-low": "#f5f2ff",
+              "outline-variant": "#c6c5d7",
+              "inverse-surface": "#302f39",
+              "surface-container-high": "#e9e6f3",
+              "primary-fixed": "#e1e0ff",
+              "outline": "#767586",
+              "error": "#ba1a1a",
+              "on-secondary": "#ffffff",
+              "on-primary": "#ffffff",
+              "primary-container": "#4648d4",
+              "tertiary-container": "#904900",
+              "on-tertiary-container": "#ffcaa6"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(228, 225, 238, 0.8);
+            backdrop-filter: blur(24px);
+        }
+        .canvas-bg {
+            background-color: #e9e6f3;
+            background-image: radial-gradient(#c6c5d7 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+        }
+        .node-pulse {
+            box-shadow: 0 0 0 0 rgba(70, 72, 212, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body overflow-hidden h-screen flex">
+<!-- SideNavBar (from Shared Components) -->
+<aside class="w-64 h-screen sticky top-0 left-0 bg-slate-100/80 dark:bg-slate-900/80 backdrop-blur-3xl flex flex-col py-6 border-r border-slate-200/10 shadow-[0_0_32px_rgba(27,27,36,0.06)] z-50">
+<div class="px-6 mb-8">
+<h1 class="text-lg font-bold tracking-tighter text-[#1b1b24] dark:text-[#f5f2ff]">The Manuscript</h1>
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant opacity-60">Zen Editorial Mode</p>
+</div>
+<nav class="flex-1 px-3 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-[#464554] dark:text-[#c6c5d7] hover:bg-slate-200/40 dark:hover:bg-slate-700/40 transition-colors font-manrope text-sm tracking-tight rounded-lg" href="#">
+<span class="material-symbols-outlined">auto_fix_high</span>
+<span>Assistant</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-[#4648d4]/10 text-[#2c2abc] dark:text-[#f5f2ff] rounded-lg border-l-4 border-[#4648d4] font-manrope text-sm tracking-tight" href="#">
+<span class="material-symbols-outlined">hub</span>
+<span>Graph</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#464554] dark:text-[#c6c5d7] hover:bg-slate-200/40 dark:hover:bg-slate-700/40 transition-colors font-manrope text-sm tracking-tight rounded-lg" href="#">
+<span class="material-symbols-outlined">fingerprint</span>
+<span>Fingerprint</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#464554] dark:text-[#c6c5d7] hover:bg-slate-200/40 dark:hover:bg-slate-700/40 transition-colors font-manrope text-sm tracking-tight rounded-lg" href="#">
+<span class="material-symbols-outlined">edit_note</span>
+<span>Drafts</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#464554] dark:text-[#c6c5d7] hover:bg-slate-200/40 dark:hover:bg-slate-700/40 transition-colors font-manrope text-sm tracking-tight rounded-lg" href="#">
+<span class="material-symbols-outlined">auto_stories</span>
+<span>Library</span>
+</a>
+</nav>
+<div class="px-3 mt-auto space-y-1">
+<button class="w-full mb-4 py-3 px-4 bg-gradient-to-r from-[#4648d4] to-[#6063ee] text-white rounded-lg font-bold text-sm shadow-lg active:scale-95 transition-transform">
+                New Draft
+            </button>
+<a class="flex items-center gap-3 px-4 py-3 text-[#464554] dark:text-[#c6c5d7] hover:bg-slate-200/40 dark:hover:bg-slate-700/40 transition-colors font-manrope text-sm tracking-tight rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#464554] dark:text-[#c6c5d7] hover:bg-slate-200/40 dark:hover:bg-slate-700/40 transition-colors font-manrope text-sm tracking-tight rounded-lg" href="#">
+<span class="material-symbols-outlined">help</span>
+<span>Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Workspace -->
+<main class="flex-1 flex flex-col relative h-screen overflow-hidden">
+<!-- TopNavBar (from Shared Components) -->
+<header class="w-full h-14 sticky top-0 z-40 bg-slate-50/50 dark:bg-slate-950/50 backdrop-blur-xl border-b border-slate-200/20 dark:border-slate-800/20 flex justify-between items-center px-8">
+<div class="flex items-center gap-8">
+<span class="font-headline font-extrabold text-lg tracking-tighter text-primary">Ethereal Manuscript</span>
+<nav class="flex gap-6">
+<a class="font-manrope text-xs font-bold uppercase tracking-widest text-[#464554] dark:text-[#c6c5d7] hover:text-[#1b1b24] dark:hover:text-white transition-opacity" href="#">Check</a>
+<a class="font-manrope text-xs font-bold uppercase tracking-widest text-[#464554] dark:text-[#c6c5d7] hover:text-[#1b1b24] dark:hover:text-white transition-opacity" href="#">Continue</a>
+<a class="font-manrope text-xs font-bold uppercase tracking-widest text-[#4648d4] dark:text-[#6063ee] border-b-2 border-[#4648d4] pb-1" href="#">Analyze</a>
+<a class="font-manrope text-xs font-bold uppercase tracking-widest text-[#464554] dark:text-[#c6c5d7] hover:text-[#1b1b24] dark:hover:text-white transition-opacity" href="#">Inference</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="bg-surface-container-highest/40 border-none rounded-full pl-10 pr-4 py-1.5 text-xs w-48 focus:ring-1 focus:ring-primary/20" placeholder="Search entity..." type="text"/>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">history</button>
+</div>
+</header>
+<!-- Content Area -->
+<div class="flex flex-1 overflow-hidden">
+<!-- Filter Sidebar (Left Panel) -->
+<aside class="w-16 hover:w-56 transition-all duration-300 group z-30 flex flex-col bg-surface-container-high border-r border-outline-variant/10 p-3">
+<div class="space-y-4">
+<div class="flex flex-col gap-2">
+<label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity px-2">Filters</label>
+<button class="flex items-center gap-4 p-2 rounded-lg bg-primary/10 text-primary group-hover:px-4">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="whitespace-nowrap text-sm opacity-0 group-hover:opacity-100 transition-opacity">Protagonists</span>
+</button>
+<button class="flex items-center gap-4 p-2 rounded-lg hover:bg-surface-container-highest transition-colors group-hover:px-4">
+<span class="material-symbols-outlined">skull</span>
+<span class="whitespace-nowrap text-sm opacity-0 group-hover:opacity-100 transition-opacity">Antagonists</span>
+</button>
+<button class="flex items-center gap-4 p-2 rounded-lg hover:bg-surface-container-highest transition-colors group-hover:px-4">
+<span class="material-symbols-outlined">groups</span>
+<span class="whitespace-nowrap text-sm opacity-0 group-hover:opacity-100 transition-opacity">Secondary</span>
+</button>
+<button class="flex items-center gap-4 p-2 rounded-lg hover:bg-surface-container-highest transition-colors group-hover:px-4">
+<span class="material-symbols-outlined">location_on</span>
+<span class="whitespace-nowrap text-sm opacity-0 group-hover:opacity-100 transition-opacity">Locations</span>
+</button>
+</div>
+<div class="pt-4 border-t border-outline-variant/20 opacity-0 group-hover:opacity-100 transition-opacity px-2">
+<label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest block mb-4">Time range</label>
+<div class="h-1 bg-outline-variant rounded-full relative mb-6">
+<div class="absolute left-2 right-12 h-1 bg-primary rounded-full"></div>
+<div class="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 bg-primary rounded-full border-2 border-white shadow-sm"></div>
+<div class="absolute right-12 top-1/2 -translate-y-1/2 w-3 h-3 bg-primary rounded-full border-2 border-white shadow-sm"></div>
+</div>
+<div class="flex justify-between text-[10px] text-on-surface-variant">
+<span>Ch. 1</span>
+<span>Ch. 42</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Graph Canvas -->
+<section class="flex-1 canvas-bg relative overflow-hidden cursor-grab active:cursor-grabbing">
+<!-- SVG Connections Placeholder (Visual Only) -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none opacity-40">
+<line stroke="#4648d4" stroke-dasharray="4" stroke-width="1.5" x1="400" x2="600" y1="300" y2="450"></line>
+<line stroke="#4648d4" stroke-width="1.5" x1="400" x2="250" y1="300" y2="400"></line>
+<line stroke="#4648d4" stroke-width="1.5" x1="400" x2="450" y1="300" y2="150"></line>
+</svg>
+<!-- Nodes -->
+<!-- Active Node: Chen Mo -->
+<div class="absolute top-[300px] left-[400px] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center group">
+<div class="w-16 h-16 rounded-full border-4 border-primary p-1 bg-white shadow-xl flex items-center justify-center overflow-hidden z-10 relative">
+<img class="w-full h-full object-cover rounded-full" data-alt="Portrait of a young man with sharp features and thoughtful expression in high-key cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjwgwpCVD06T__LTq700YhHnTB_xWUXOIVPtzGXCOdgaVKCqcNOGby9as8WuWDvQCs3xjQgrgQiQH6Q2W4ZDQUV8J3dbarGG4PQwfv_G0pDuCdHB6qQvBIApbpeOSAA6FYNT2iJOKQv7HvUsQMzr6U3QxEG1_RtznYq5N3Xye6dVnMG_Qncl--ne4BN3mERKGvX8Ay1f70yyP7hGF5YTv3jj2hpESc6FpJtEnp_x7-aljxhvktHt7N1K5BviR1YtSHwCkZNKtBj9n0"/>
+<div class="absolute inset-0 ring-4 ring-primary/20 animate-pulse rounded-full"></div>
+</div>
+<span class="mt-2 px-3 py-1 bg-primary text-white text-xs font-bold rounded-full shadow-sm">Chen Mo</span>
+</div>
+<!-- Related Node: Su Yao -->
+<div class="absolute top-[450px] left-[600px] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center group">
+<div class="w-12 h-12 rounded-full border-2 border-outline-variant p-0.5 bg-white shadow-md flex items-center justify-center overflow-hidden transition-all hover:scale-110 hover:border-primary">
+<img class="w-full h-full object-cover rounded-full" data-alt="Close up portrait of a woman with long dark hair and mysterious soft lighting artistic photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuqkM9xk9CGQKw3l-_KSPlwahQHWvYv2Xa6bmopok78F6RVaX7tJCMgE-fOD2K6eOvBcxmjQ8fXXB01bazq7HoGm_I5fjRR9ZqAEiRM6H3IwvIiJHCTV0zibBmW9_kvBLgzMGORs3qF4rOssG89IOOqzd44-vyFYYfHAeV2fxUuBTvFxzMSlLA3MxOLHhUaRutTTc_2ajr3G-puu8mPjNJhW7x_qB5_kaGG7MjyGlADGL3qn3pZAu3ngmjzpPiZaoJJPAFVFW0_uk8"/>
+</div>
+<span class="mt-2 text-[10px] font-bold text-on-surface-variant">Su Yao</span>
+</div>
+<!-- Secondary Node -->
+<div class="absolute top-[400px] left-[250px] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center group opacity-60">
+<div class="w-10 h-10 rounded-full border-2 border-outline-variant bg-surface-container-highest flex items-center justify-center transition-all hover:scale-110 hover:opacity-100">
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+<span class="mt-2 text-[10px] text-on-surface-variant">Old Master</span>
+</div>
+<!-- Canvas Controls -->
+<div class="absolute bottom-8 left-8 flex flex-col gap-2">
+<button class="w-10 h-10 glass-panel rounded-lg flex items-center justify-center shadow-lg hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-primary">add</span>
+</button>
+<button class="w-10 h-10 glass-panel rounded-lg flex items-center justify-center shadow-lg hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-primary">remove</span>
+</button>
+<button class="w-10 h-10 glass-panel rounded-lg flex items-center justify-center shadow-lg hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-primary">filter_center_focus</span>
+</button>
+</div>
+</section>
+<!-- Inspection Panel (Right Panel) -->
+<aside class="w-96 glass-panel border-l border-outline-variant/10 flex flex-col shadow-2xl z-40">
+<!-- Header -->
+<div class="p-6 pb-0">
+<div class="flex justify-between items-start mb-6">
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-bold uppercase rounded-md tracking-wider">Protagonist</span>
+<span class="text-[10px] font-medium text-on-surface-variant opacity-60 italic">Updated 2m ago</span>
+</div>
+<h2 class="text-2xl font-headline font-extrabold text-on-surface tracking-tight">Chen Mo</h2>
+</div>
+<button class="w-8 h-8 rounded-full hover:bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">close</span>
+</button>
+</div>
+<div class="flex gap-4 border-b border-outline-variant/10">
+<button class="pb-3 text-sm font-bold text-primary border-b-2 border-primary">Overview</button>
+<button class="pb-3 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">Arc Graph</button>
+<button class="pb-3 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">Appearances</button>
+</div>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto p-6 space-y-8">
+<!-- Character Background Card -->
+<section>
+<h3 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-3">Background Settings</h3>
+<div class="bg-surface-container-low rounded-xl p-4 space-y-4">
+<div class="grid grid-cols-2 gap-4">
+<div>
+<p class="text-[10px] font-bold text-on-surface-variant/60 uppercase">Origin</p>
+<p class="text-sm font-medium">South District, Neo-Beijing</p>
+</div>
+<div>
+<p class="text-[10px] font-bold text-on-surface-variant/60 uppercase">Occupation</p>
+<p class="text-sm font-medium">Bio-Hacker / Rogue</p>
+</div>
+</div>
+<div>
+<p class="text-[10px] font-bold text-on-surface-variant/60 uppercase mb-1">Motivation</p>
+<p class="text-sm text-on-surface leading-relaxed">Recovering the encrypted memories of his father while evading the Central Syndicate's digital surveillance net.</p>
+</div>
+</div>
+</section>
+<!-- Relationships List -->
+<section>
+<div class="flex justify-between items-center mb-3">
+<h3 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Key Relationships</h3>
+<button class="text-[10px] font-bold text-primary hover:underline">See All</button>
+</div>
+<div class="space-y-3">
+<div class="flex items-center gap-3 p-2 rounded-lg bg-surface-container-highest/50">
+<div class="w-10 h-10 rounded-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Female character portrait with futuristic aesthetics and soft purple backlighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXhxaw28pacCm0I1pMJH_gdOe1Wk3WI1NgfcC0DyAVJmKOqNNTBknNAhiY51cVdOsODf6AMnQ46tiKlIwHavOy-2HmUK2aox2DGoK57cYj90bOdGkWsVZjzzQzlYjOJw5NDHUVo7hKOtkx2XbZiX2WjBsspsgPtynGucOdab7qe45Kgd6pe9Fr_1ensfqu4mW1Lr4PSHar3RKVGWKamdpVEe16Rw93R14ImdSVRX4abqbDtux06yfPD-woufaabojc_4W9wq8n1_t7"/>
+</div>
+<div class="flex-1">
+<p class="text-sm font-bold">Su Yao</p>
+<p class="text-[10px] text-tertiary font-medium">Romantic Interest / Rival</p>
+</div>
+<div class="w-1 h-6 bg-tertiary rounded-full opacity-20"></div>
+</div>
+<div class="flex items-center gap-3 p-2 rounded-lg bg-surface-container-highest/50">
+<div class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">smart_toy</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-bold">ECHO-7</p>
+<p class="text-[10px] text-on-surface-variant font-medium">Companion AI</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Narrative Weight AI Block -->
+<section class="bg-primary/5 rounded-xl p-4 border border-primary/10">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-primary text-sm">psychology</span>
+<h3 class="text-xs font-bold text-primary uppercase tracking-widest">AI Editorial Insights</h3>
+</div>
+<p class="text-xs text-on-surface leading-relaxed italic opacity-80">
+                            "Chen Mo’s presence has increased by 14% since Chapter 28. Consider introducing a conflict with Su Yao to maintain the emotional pacing in the upcoming Act."
+                        </p>
+</section>
+</div>
+<!-- Footer Action -->
+<div class="p-6 bg-surface-container-highest/30">
+<button class="w-full py-3 px-4 bg-primary text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-sm">edit</span>
+                        Edit Details
+                    </button>
+</div>
+</aside>
+</div>
+</main>
+</body></html>

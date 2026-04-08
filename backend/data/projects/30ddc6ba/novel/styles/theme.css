@@ -1,0 +1,388 @@
+/**
+ * NovelCraft Docsify Theme
+ * 专为小说阅读优化的 Docsify 主题
+ */
+
+/* ===== 基础变量 ===== */
+:root {
+  /* 颜色 */
+  --nc-bg: #faf9f7;
+  --nc-bg-secondary: #f5f4f2;
+  --nc-text: #333333;
+  --nc-text-secondary: #666666;
+  --nc-accent: #8b7355;
+  --nc-accent-hover: #6b5a47;
+  --nc-border: #e5e4e2;
+  --nc-code-bg: #f0f0f0;
+
+  /* 字体 */
+  --nc-font-reading: 'Noto Serif SC', 'Source Han Serif CN', 'STSong', serif;
+  --nc-font-ui: 'Noto Sans SC', 'PingFang SC', sans-serif;
+
+  /* 尺寸 */
+  --nc-content-width: 800px;
+  --nc-sidebar-width: 260px;
+  --nc-font-size: 18px;
+  --nc-line-height: 1.9;
+  --nc-paragraph-gap: 1.8em;
+}
+
+/* 暗色模式 */
+.dark, [data-theme="dark"] {
+  --nc-bg: #1a1a2e;
+  --nc-bg-secondary: #16213e;
+  --nc-text: #e0e0e0;
+  --nc-text-secondary: #a0a0a0;
+  --nc-accent: #c9a86c;
+  --nc-accent-hover: #d4b87a;
+  --nc-border: #2a2a4a;
+  --nc-code-bg: #252542;
+}
+
+/* ===== 全局样式 ===== */
+body {
+  font-family: var(--nc-font-ui);
+  background: var(--nc-bg);
+  color: var(--nc-text);
+  transition: background 0.3s, color 0.3s;
+}
+
+/* ===== 侧边栏 ===== */
+.sidebar {
+  font-family: var(--nc-font-ui);
+  background: var(--nc-bg-secondary);
+  border-right: 1px solid var(--nc-border);
+  padding: 20px 0;
+}
+
+.sidebar > h1 {
+  font-family: var(--nc-font-reading);
+  font-size: 1.4em;
+  font-weight: 600;
+  color: var(--nc-text);
+  padding: 0 20px 20px;
+  margin: 0;
+  border-bottom: 1px solid var(--nc-border);
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar li {
+  margin: 0;
+}
+
+.sidebar li > p {
+  font-weight: 600;
+  color: var(--nc-text);
+  padding: 12px 20px;
+  margin: 0;
+  font-size: 0.9em;
+  border-top: 1px solid var(--nc-border);
+}
+
+.sidebar ul ul {
+  padding-left: 0;
+}
+
+.sidebar ul ul li a {
+  display: block;
+  padding: 8px 20px 8px 30px;
+  color: var(--nc-text-secondary);
+  text-decoration: none;
+  font-size: 0.9em;
+  transition: all 0.2s;
+}
+
+.sidebar ul ul li a:hover {
+  color: var(--nc-accent);
+  background: rgba(139, 115, 85, 0.1);
+}
+
+.sidebar ul ul li.active > a {
+  color: var(--nc-accent);
+  border-left: 3px solid var(--nc-accent);
+  background: rgba(139, 115, 85, 0.1);
+}
+
+/* ===== 主内容区 ===== */
+.content {
+  font-family: var(--nc-font-reading);
+  font-size: var(--nc-font-size);
+  line-height: var(--nc-line-height);
+  max-width: var(--nc-content-width);
+  padding: 40px 60px;
+  background: var(--nc-bg);
+}
+
+/* 段落 */
+.content p {
+  margin: var(--nc-paragraph-gap) 0;
+  text-align: justify;
+}
+
+/* 中文首行缩进（非标题后的首段） */
+.content p:not(h1 + p, h2 + p, h3 + p) {
+  text-indent: 2em;
+}
+
+/* 标题 */
+.content h1,
+.content h2,
+.content h3,
+.content h4 {
+  font-family: var(--nc-font-reading);
+  color: var(--nc-text);
+  font-weight: 600;
+  margin: 2em 0 1em;
+  text-indent: 0;
+}
+
+.content h1 {
+  font-size: 1.8em;
+  text-align: center;
+  margin: 1em 0;
+  padding-bottom: 0.5em;
+  border-bottom: 2px solid var(--nc-accent);
+}
+
+.content h2 {
+  font-size: 1.5em;
+  text-align: center;
+}
+
+.content h3 {
+  font-size: 1.2em;
+}
+
+/* 对话样式（可手动添加 class="dialogue"） */
+.content .dialogue {
+  text-indent: 0;
+  margin-left: 1em;
+}
+
+/* 引用 */
+.content blockquote {
+  border-left: 4px solid var(--nc-accent);
+  background: var(--nc-bg-secondary);
+  padding: 15px 20px;
+  margin: 1.5em 0;
+  color: var(--nc-text-secondary);
+}
+
+.content blockquote p {
+  text-indent: 0;
+  margin: 0.5em 0;
+}
+
+/* 分隔线 */
+.content hr {
+  border: none;
+  text-align: center;
+  margin: 3em 0;
+}
+
+.content hr::before {
+  content: '✦ ✦ ✦';
+  color: var(--nc-accent);
+  font-size: 1em;
+  letter-spacing: 0.5em;
+}
+
+/* 强调 */
+.content strong {
+  font-weight: 600;
+  color: var(--nc-text);
+}
+
+.content em {
+  font-style: italic;
+}
+
+/* 代码 */
+.content code {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9em;
+  background: var(--nc-code-bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.content pre {
+  background: var(--nc-code-bg);
+  padding: 16px 20px;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.content pre code {
+  padding: 0;
+  background: none;
+}
+
+/* 链接 */
+.content a {
+  color: var(--nc-accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.content a:hover {
+  border-bottom-color: var(--nc-accent);
+}
+
+/* 列表 */
+.content ul,
+.content ol {
+  padding-left: 2em;
+  margin: 1em 0;
+}
+
+.content li {
+  margin: 0.5em 0;
+}
+
+/* ===== 分页导航 ===== */
+.docsify-pagination-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 30px 0;
+  margin-top: 40px;
+  border-top: 1px solid var(--nc-border);
+}
+
+.pagination-item {
+  flex: 1;
+  max-width: 45%;
+}
+
+.pagination-item-label {
+  font-family: var(--nc-font-ui);
+  font-size: 0.85em;
+  color: var(--nc-text-secondary);
+}
+
+.pagination-item-title {
+  font-family: var(--nc-font-reading);
+  font-size: 1em;
+  color: var(--nc-accent);
+  margin-top: 4px;
+}
+
+.pagination-item:hover .pagination-item-title {
+  text-decoration: underline;
+}
+
+/* ===== 搜索框 ===== */
+.search {
+  margin: 10px 15px;
+}
+
+.search input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--nc-border);
+  border-radius: 6px;
+  background: var(--nc-bg);
+  color: var(--nc-text);
+  font-family: var(--nc-font-ui);
+  font-size: 0.9em;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.search input:focus {
+  border-color: var(--nc-accent);
+}
+
+.search input::placeholder {
+  color: var(--nc-text-secondary);
+}
+
+/* ===== 字数统计 ===== */
+.docsify-word-count {
+  font-family: var(--nc-font-ui);
+  font-size: 0.85em;
+  color: var(--nc-text-secondary);
+  text-align: right;
+  margin-top: 30px;
+  padding-top: 10px;
+  border-top: 1px solid var(--nc-border);
+}
+
+/* ===== 暗色模式切换按钮 ===== */
+.docsify-darklight-theme {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 100;
+}
+
+/* ===== 移动端适配 ===== */
+@media (max-width: 768px) {
+  :root {
+    --nc-font-size: 16px;
+    --nc-content-width: 100%;
+  }
+
+  .content {
+    padding: 20px;
+  }
+
+  .sidebar {
+    width: 260px !important;
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+  }
+
+  .sidebar.show {
+    transform: translateX(0);
+  }
+
+  .content h1 {
+    font-size: 1.5em;
+  }
+
+  .content h2 {
+    font-size: 1.3em;
+  }
+}
+
+/* ===== 沉浸模式（通过父窗口控制） ===== */
+.immersive-mode .sidebar {
+  display: none !important;
+}
+
+.immersive-mode .content {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 60px 20px;
+}
+
+.immersive-mode .docsify-pagination-container {
+  display: none;
+}
+
+/* ===== 打印样式 ===== */
+@media print {
+  .sidebar,
+  .docsify-darklight-theme,
+  .docsify-pagination-container,
+  .reading-progress {
+    display: none !important;
+  }
+
+  .content {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  body {
+    background: white;
+    color: black;
+  }
+}

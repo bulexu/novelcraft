@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary": "#575992",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#c0c1ff",
+                        "on-surface-variant": "#464554",
+                        "surface-container-low": "#f5f2ff",
+                        "secondary-container": "#bdbefe",
+                        "primary": "#2c2abc",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed-variant": "#703800",
+                        "error-container": "#ffdad6",
+                        "surface": "#fcf8ff",
+                        "on-secondary-container": "#494b83",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed": "#13144b",
+                        "on-primary-fixed": "#06006c",
+                        "surface-tint": "#484bd6",
+                        "surface-dim": "#dbd8e5",
+                        "on-primary-fixed-variant": "#2e2ebe",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-high": "#e9e6f3",
+                        "on-primary-container": "#d1d1ff",
+                        "background": "#fcf8ff",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "tertiary-fixed": "#ffdcc5",
+                        "surface-bright": "#fcf8ff",
+                        "inverse-on-surface": "#f2effc",
+                        "tertiary-container": "#904900",
+                        "on-secondary-fixed-variant": "#3f4178",
+                        "on-background": "#1b1b24",
+                        "outline-variant": "#c6c5d7",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#302f39",
+                        "primary-container": "#4648d4",
+                        "tertiary-fixed-dim": "#ffb782",
+                        "primary-fixed": "#e1e0ff",
+                        "on-tertiary-fixed": "#301400",
+                        "tertiary": "#6d3600",
+                        "surface-container-highest": "#e4e1ee",
+                        "on-tertiary-container": "#ffcaa6",
+                        "on-surface": "#1b1b24",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e4e1ee",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#e1e0ff",
+                        "inverse-primary": "#c0c1ff",
+                        "outline": "#767586",
+                        "surface-container": "#efecf9"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope", "sans-serif"],
+                        "body": ["Manrope", "sans-serif"],
+                        "label": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-panel { backdrop-filter: blur(24px); }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<div class="flex min-h-screen">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-screen w-64 fixed left-0 bg-[#e4e1ed]/80 dark:bg-slate-900/80 backdrop-blur-3xl space-y-2 p-4">
+<div class="flex items-center gap-3 mb-10 px-4">
+<div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_stories</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xl font-black text-[#4648d4]">浮生</span>
+<span class="text-[0.6875rem] uppercase tracking-wider text-on-surface-variant">高级创作者</span>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 text-[#464554] dark:text-slate-400 px-4 py-3 hover:bg-[#f5f2ff]/50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined">edit_note</span>
+<span class="font-manrope text-[0.875rem]">写作画布</span>
+</a>
+<a class="flex items-center gap-3 bg-[#4648d4] text-white rounded-lg px-4 py-3 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span class="font-manrope text-[0.875rem]">检测历史</span>
+</a>
+<a class="flex items-center gap-3 text-[#464554] dark:text-slate-400 px-4 py-3 hover:bg-[#f5f2ff]/50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-manrope text-[0.875rem]">角色库</span>
+</a>
+<a class="flex items-center gap-3 text-[#464554] dark:text-slate-400 px-4 py-3 hover:bg-[#f5f2ff]/50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-manrope text-[0.875rem]">设置</span>
+</a>
+</nav>
+<div class="mt-auto px-4 py-6">
+<button class="w-full bg-gradient-to-r from-primary-container to-[#6063ee] text-white py-3 rounded-lg font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary-container/20 active:scale-95 transition-all">
+<span class="material-symbols-outlined">add</span>
+<span>新建草稿</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 relative">
+<!-- TopNavBar -->
+<header class="bg-[#e9e6f3]/80 dark:bg-slate-900/80 backdrop-blur-3xl sticky top-0 z-10 w-full px-6 py-4 flex justify-between items-center shadow-[0_0_32px_rgba(27,27,36,0.06)]">
+<div class="flex items-center gap-4">
+<h1 class="text-lg font-bold text-[#1b1b24] dark:text-slate-100">AI 内容检测报告</h1>
+<span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold">92% 原创</span>
+</div>
+<div class="flex items-center gap-3">
+<button class="p-2 hover:bg-[#f5f2ff] rounded-lg transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined">share</span>
+</button>
+<button class="p-2 hover:bg-[#f5f2ff] rounded-lg transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined">download</span>
+</button>
+<button class="bg-primary-container text-white px-5 py-2 rounded-lg font-manrope text-sm font-bold tracking-tight hover:opacity-90 active:scale-95 transition-all">
+                        导出报告
+                    </button>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="p-8 max-w-6xl mx-auto space-y-8">
+<!-- Metrics Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-surface-container-high rounded-xl p-6 flex flex-col justify-between">
+<span class="text-on-surface-variant text-xs font-bold uppercase tracking-wider">检测范围</span>
+<div class="flex items-baseline gap-2 mt-2">
+<span class="text-2xl font-bold text-on-surface">Ch. 1-15</span>
+<span class="text-xs text-on-surface-variant">章节索引</span>
+</div>
+</div>
+<div class="bg-surface-container-high rounded-xl p-6 flex flex-col justify-between">
+<span class="text-on-surface-variant text-xs font-bold uppercase tracking-wider">总字数</span>
+<div class="flex items-baseline gap-2 mt-2">
+<span class="text-2xl font-bold text-on-surface">42,500</span>
+<span class="text-xs text-on-surface-variant">字符 (计空格)</span>
+</div>
+</div>
+<div class="bg-surface-container-high rounded-xl p-6 flex flex-col justify-between">
+<span class="text-on-surface-variant text-xs font-bold uppercase tracking-wider">检测时间</span>
+<div class="flex items-baseline gap-2 mt-2">
+<span class="text-2xl font-bold text-on-surface">2026-10-12</span>
+<span class="text-xs text-on-surface-variant">GMT+8</span>
+</div>
+</div>
+</div>
+<!-- Analysis Bento Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Distribution Chart -->
+<div class="lg:col-span-4 bg-surface-container-highest/80 glass-panel rounded-2xl p-8 flex flex-col">
+<h3 class="text-title-sm font-bold mb-8">内容成分分布</h3>
+<div class="relative w-48 h-48 mx-auto flex items-center justify-center">
+<!-- Simulated Chart with Gradients -->
+<div class="absolute inset-0 rounded-full border-[16px] border-primary" style="clip-path: polygon(50% 50%, -20% -20%, 120% -20%, 120% 120%, 50% 50%);"></div>
+<div class="absolute inset-0 rounded-full border-[16px] border-tertiary-container rotate-[320deg]" style="clip-path: polygon(50% 50%, 50% -20%, 80% -20%, 50% 50%);"></div>
+<div class="absolute inset-0 rounded-full border-[16px] border-surface-container-low rotate-[340deg]" style="clip-path: polygon(50% 50%, 50% -20%, 65% -20%, 50% 50%);"></div>
+<div class="text-center">
+<span class="text-3xl font-black text-primary">92%</span>
+<p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-tighter">原创度评分</p>
+</div>
+</div>
+<div class="mt-8 space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<span class="text-sm">原创内容</span>
+</div>
+<span class="text-sm font-bold">92%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-tertiary-container"></div>
+<span class="text-sm">疑似AI生成</span>
+</div>
+<span class="text-sm font-bold">5%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-surface-container-low"></div>
+<span class="text-sm">待复核内容</span>
+</div>
+<span class="text-sm font-bold">3%</span>
+</div>
+</div>
+</div>
+<!-- Improvement Suggestions -->
+<div class="lg:col-span-8 bg-surface-container-highest/80 glass-panel rounded-2xl p-8">
+<h3 class="text-title-sm font-bold mb-6">改善建议与指导</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-4 rounded-xl border-l-4 border-primary">
+<div class="flex items-center gap-3 mb-2">
+<span class="w-6 h-6 rounded-full bg-primary text-white text-xs flex items-center justify-center font-bold">1</span>
+<span class="font-bold text-sm">引入矛盾冲突</span>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed">AI生成的叙述往往过于平滑。增加人物内心冲突与环境阻力，能显著提升文本的"生命感"。</p>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl border-l-4 border-primary">
+<div class="flex items-center gap-3 mb-2">
+<span class="w-6 h-6 rounded-full bg-primary text-white text-xs flex items-center justify-center font-bold">2</span>
+<span class="font-bold text-sm">强化官能描写</span>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed">着重描写气味、触感及极其细微的视觉特征。这些具象经验是目前AI最难模拟的维度。</p>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl border-l-4 border-primary">
+<div class="flex items-center gap-3 mb-2">
+<span class="w-6 h-6 rounded-full bg-primary text-white text-xs flex items-center justify-center font-bold">3</span>
+<span class="font-bold text-sm">打破句式平衡</span>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed">交替使用极短句与极长句。AI偏好平均长度的平衡句式，人为制造节奏波峰可增强真实性。</p>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl border-l-4 border-primary">
+<div class="flex items-center gap-3 mb-2">
+<span class="w-6 h-6 rounded-full bg-primary text-white text-xs flex items-center justify-center font-bold">4</span>
+<span class="font-bold text-sm">个性化语癖</span>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed">为特定角色赋予独特的口头禅或逻辑跳转。不完美的语言习惯正是人类表达的精髓。</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Segment Analysis -->
+<section class="space-y-4">
+<div class="flex justify-between items-center">
+<h3 class="text-title-sm font-bold">段落细分分析</h3>
+<span class="text-xs text-on-surface-variant">共分析 128 个段落</span>
+</div>
+<div class="space-y-3">
+<!-- Low Risk -->
+<div class="bg-surface-container-highest/60 rounded-xl p-5 group hover:bg-surface-container-highest transition-all">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex-1">
+<p class="text-sm text-on-surface line-clamp-2 italic leading-relaxed">
+                                        “窗外的风似乎在低声诉说着往事，那些被岁月尘封的记忆，在这一刻悄然苏醒。他握着笔的手微微颤抖，纸页上落下的每一个字都显得沉重而迟疑。”
+                                    </p>
+</div>
+<div class="w-full md:w-48 flex flex-col gap-1">
+<div class="flex justify-between items-center text-[10px] font-bold text-on-surface-variant">
+<span>AI 可能性</span>
+<span class="text-green-600">2% (极低风险)</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-low rounded-full overflow-hidden">
+<div class="bg-green-500 h-full w-[2%]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Medium Risk -->
+<div class="bg-surface-container-highest/60 rounded-xl p-5 group hover:bg-surface-container-highest transition-all border-l-4 border-transparent hover:border-tertiary-container/30">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex-1">
+<p class="text-sm text-on-surface line-clamp-2 italic leading-relaxed">
+                                        “城市在夜幕下沉睡，街道两旁的霓虹灯闪烁着迷离的光。他独自走在空旷的马路上，影子被拉得很长。这种孤独感让他感到窒息，却又无处遁形。”
+                                    </p>
+</div>
+<div class="w-full md:w-48 flex flex-col gap-1">
+<div class="flex justify-between items-center text-[10px] font-bold text-on-surface-variant">
+<span>AI 可能性</span>
+<span class="text-amber-600">48% (中度风险)</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-low rounded-full overflow-hidden">
+<div class="bg-amber-500 h-full w-[48%]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- High Risk Alert -->
+<div class="bg-tertiary-container/5 rounded-xl p-5 border-l-4 border-tertiary-container">
+<div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+<div class="flex-1">
+<p class="text-sm text-on-surface italic leading-relaxed mb-3">
+                                        “根据相关研究表明，文学创作中的情感表达是多元化的，通过运用环境描写与心理暗示的结合，作者可以更有效地向读者传递其核心价值观与叙事深度。”
+                                    </p>
+<div class="flex items-center gap-2 text-tertiary font-bold text-xs">
+<span class="material-symbols-outlined text-sm">warning</span>
+<span>检测到异常模式：过度均衡的句式结构与说明文倾向。</span>
+</div>
+</div>
+<div class="w-full md:w-48 flex flex-col gap-1">
+<div class="flex justify-between items-center text-[10px] font-bold text-tertiary">
+<span>AI 可能性</span>
+<span>89% (高度疑似)</span>
+</div>
+<div class="w-full h-1.5 bg-tertiary-container/20 rounded-full overflow-hidden">
+<div class="bg-tertiary h-full w-[89%]"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Footer Meta -->
+<footer class="p-8 text-center">
+<p class="text-[10px] text-on-surface-variant/60 uppercase tracking-widest">
+                    Generated by Zen Editorial AI Analysis Engine v4.2.0 • Encryption Secured
+                </p>
+</footer>
+</main>
+</div>
+</body></html>

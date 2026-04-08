@@ -1,0 +1,9 @@
+{
+  "simulation_id": "sim_031a4dd2c864",
+  "project_id": "30ddc6ba",
+  "platform": "narrative",
+  "num_rounds": 5,
+  "agent_count": 1,
+  "seed_scenario": "基于第2章的情节发展，预测角色们的下一步行动。\n\n当前情节：这是第二章的内容...\n\n李明走进城门，第一次见到了她。...",
+  "created_at": "2026-04-02T16:11:21.182698"
+}

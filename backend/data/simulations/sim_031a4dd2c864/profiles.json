@@ -1,0 +1,18 @@
+[
+  {
+    "user_name": "李明",
+    "name": "李明",
+    "description": "外貌: 身材高大，面容俊朗 | 背景: 出身世家，但选择独立打拼",
+    "profile": {
+      "personality": "",
+      "background": "出身世家，但选择独立打拼",
+      "goals": [
+        "未明确目标"
+      ],
+      "fears": [
+        "未知恐惧"
+      ]
+    },
+    "recsys_type": "reddit"
+  }
+]
