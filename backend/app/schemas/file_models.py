@@ -14,6 +14,22 @@ import re
 # Character Models
 # ============================================================================
 
+class MotivationSystem(BaseModel):
+    """动机系统"""
+    goals: List[str] = Field(default_factory=list, description="目标")
+    obsessions: List[str] = Field(default_factory=list, description="执念")
+    fears: List[str] = Field(default_factory=list, description="恐惧")
+    desires: List[str] = Field(default_factory=list, description="渴望")
+
+
+class CharacterArc(BaseModel):
+    """角色弧线"""
+    arc_type: Optional[str] = None  # 成长型/堕落型/救赎型/平面型
+    current_stage: Optional[str] = None
+    current_challenge: str = ""
+    predicted_ending: str = ""
+
+
 class PersonalityPalette(BaseModel):
     """性格调色盘 - novel-craft 风格"""
     main_tone: str = Field(default="", description="主色调")
@@ -47,7 +63,7 @@ class CharacterMD(BaseModel):
     gender: Optional[str] = None
     age: Optional[int] = None
     status: str = "alive"
-    arc_type: Optional[str] = None  # growth/fall/redemption
+    arc_type: Optional[str] = None  # growth/fall/redemption (保留在 frontmatter 便于筛选)
 
     # Markdown content
     appearance: str = ""
@@ -55,6 +71,8 @@ class CharacterMD(BaseModel):
     personality_palette: PersonalityPalette = Field(default_factory=PersonalityPalette)
     behavior_boundary: BehaviorBoundary = Field(default_factory=BehaviorBoundary)
     relationships: List[CharacterRelation] = Field(default_factory=list)
+    motivation: MotivationSystem = Field(default_factory=MotivationSystem)
+    character_arc: CharacterArc = Field(default_factory=CharacterArc)
 
     # Metadata
     created_at: Optional[datetime] = None

@@ -15,7 +15,7 @@ import {
   Divider,
 } from 'antd';
 import { PlusOutlined, CloseOutlined, DeleteOutlined } from '@ant-design/icons';
-import type { Character, PersonalityPalette, MotivationSystem, CharacterRelation } from '@/types';
+import type { Character, PersonalityPalette, MotivationSystem, CharacterRelation, CharacterArc } from '@/types';
 
 const { TextArea } = Input;
 
@@ -47,6 +47,11 @@ interface FormValues {
   desires: string; // 渴望
   // 关系网络
   relationships: CharacterRelation[];
+  // 角色弧线
+  character_arc_type: string | null;
+  character_arc_stage: string | null;
+  character_arc_challenge: string;
+  character_arc_ending: string;
 }
 
 const genderOptions = [
@@ -62,6 +67,46 @@ const arcTypeOptions = [
   { value: '反派', label: '反派' },
   { value: '路人', label: '路人' },
 ];
+
+// 角色弧线类型选项
+const characterArcTypeOptions = [
+  { value: '成长型', label: '成长型', description: '从弱到强' },
+  { value: '堕落型', label: '堕落型', description: '从好到坏' },
+  { value: '救赎型', label: '救赎型', description: '从迷失到觉醒' },
+  { value: '平面型', label: '平面型', description: '性格基本不变' },
+];
+
+// 弧线阶段选项（按类型）
+const arcStageOptions: Record<string, { value: string; label: string }[]> = {
+  '成长型': [
+    { value: '起点', label: '起点' },
+    { value: '觉醒', label: '觉醒' },
+    { value: '考验', label: '考验' },
+    { value: '低谷', label: '低谷' },
+    { value: '突破', label: '突破' },
+    { value: '巅峰', label: '巅峰' },
+    { value: '结局', label: '结局' },
+  ],
+  '堕落型': [
+    { value: '高点', label: '高点' },
+    { value: '诱惑', label: '诱惑' },
+    { value: '妥协', label: '妥协' },
+    { value: '沉沦', label: '沉沦' },
+    { value: '触底', label: '触底' },
+    { value: '结局', label: '结局' },
+  ],
+  '救赎型': [
+    { value: '迷失', label: '迷失' },
+    { value: '挣扎', label: '挣扎' },
+    { value: '救赎机会', label: '救赎机会' },
+    { value: '考验', label: '考验' },
+    { value: '觉醒', label: '觉醒' },
+    { value: '结局', label: '结局' },
+  ],
+  '平面型': [
+    { value: '稳定', label: '稳定' },
+  ],
+};
 
 const relationTypeOptions = [
   { value: '恋人', label: '恋人' },
@@ -192,6 +237,37 @@ const formToMotivation = (values: FormValues): MotivationSystem => {
   return { goals, obsessions, fears, desires };
 };
 
+// 解析 character_arc 数据到表单值
+const parseArcToForm = (arc: CharacterArc | undefined | null): Partial<FormValues> => {
+  if (!arc) {
+    return {
+      character_arc_type: null,
+      character_arc_stage: null,
+      character_arc_challenge: '',
+      character_arc_ending: '',
+    };
+  }
+  return {
+    character_arc_type: arc.arc_type || null,
+    character_arc_stage: arc.current_stage || null,
+    character_arc_challenge: arc.current_challenge || '',
+    character_arc_ending: arc.predicted_ending || '',
+  };
+};
+
+// 将表单值转换为 character_arc 格式
+const formToArc = (values: FormValues): CharacterArc | undefined => {
+  if (!values.character_arc_type) {
+    return undefined;
+  }
+  return {
+    arc_type: values.character_arc_type,
+    current_stage: values.character_arc_stage || '',
+    current_challenge: values.character_arc_challenge?.trim() || '',
+    predicted_ending: values.character_arc_ending?.trim() || '',
+  };
+};
+
 export default function CharacterForm({
   open,
   character,
@@ -211,6 +287,7 @@ export default function CharacterForm({
       if (character) {
         const personalityValues = parsePersonalityToForm(character.personality_palette);
         const motivationValues = parseMotivationToForm(character.motivation);
+        const arcValues = parseArcToForm(character.character_arc);
         form.setFieldsValue({
           name: character.name,
           aliases: character.aliases?.join(', ') || '',
@@ -221,6 +298,7 @@ export default function CharacterForm({
           background: character.background || '',
           ...personalityValues,
           ...motivationValues,
+          ...arcValues,
         });
         // 解析核心性格标签到 traits 数组
         const mainTone = character.personality_palette?.main_tone || '';
@@ -271,6 +349,7 @@ export default function CharacterForm({
 
       const personality_palette = formToPersonality(values);
       const motivation = formToMotivation(values);
+      const character_arc = formToArc(values);
 
       const characterData: Partial<Character> = {
         name: values.name.trim(),
@@ -282,6 +361,7 @@ export default function CharacterForm({
         background: values.background?.trim() || '',
         personality_palette,
         motivation,
+        character_arc,
         // Set defaults for new character
         ...(isEditing ? {
           // Preserve existing relationships when editing
@@ -587,6 +667,101 @@ export default function CharacterForm({
             </div>
           )}
         </Form.List>
+      ),
+    },
+    {
+      key: 'character_arc',
+      label: '角色弧线（可选）',
+      children: (
+        <div className="space-y-4">
+          {/* 弧线类型 */}
+          <Form.Item
+            name="character_arc_type"
+            label="弧线类型"
+            extra="选择角色弧线的类型"
+            rules={[
+              {
+                validator: (_, value) => {
+                  if (!value) {
+                    const challenge = form.getFieldValue('character_arc_challenge');
+                    const ending = form.getFieldValue('character_arc_ending');
+                    if (challenge?.trim() || ending?.trim()) {
+                      return Promise.reject(new Error('填写了弧线内容时必须选择弧线类型'));
+                    }
+                  }
+                  return Promise.resolve();
+                },
+              },
+            ]}
+          >
+            <Select
+              placeholder="选择弧线类型"
+              allowClear
+              options={characterArcTypeOptions.map(opt => ({
+                value: opt.value,
+                label: `${opt.label}（${opt.description}）`,
+              }))}
+            />
+          </Form.Item>
+
+          {/* 当前阶段 */}
+          <Form.Item
+            noStyle
+            shouldUpdate={(prev, curr) => prev.character_arc_type !== curr.character_arc_type}
+          >
+            {({ getFieldValue, setFieldValue }) => {
+              const arcType = getFieldValue('character_arc_type');
+              const stages = arcStageOptions[arcType || ''] || [];
+              const currentStage = getFieldValue('character_arc_stage');
+              // 类型变更后，如果当前阶段不在新类型的阶段列表中，清除阶段
+              if (currentStage && stages.length > 0 && !stages.some(s => s.value === currentStage)) {
+                setTimeout(() => setFieldValue('character_arc_stage', null), 0);
+              }
+              return (
+                <Form.Item
+                  name="character_arc_stage"
+                  label="当前阶段"
+                  extra="角色当前所处的弧线阶段"
+                >
+                  <Select
+                    placeholder="选择当前阶段"
+                    allowClear
+                    disabled={!arcType}
+                    options={stages}
+                  />
+                </Form.Item>
+              );
+            }}
+          </Form.Item>
+
+          {/* 面临挑战 */}
+          <Form.Item
+            name="character_arc_challenge"
+            label="面临挑战"
+            extra="角色当前面临的主要挑战或考验"
+          >
+            <TextArea
+              rows={2}
+              placeholder="例如：信念被动摇、关键抉择、自我怀疑"
+              maxLength={500}
+              showCount
+            />
+          </Form.Item>
+
+          {/* 预测结局 */}
+          <Form.Item
+            name="character_arc_ending"
+            label="预测结局"
+            extra="角色弧线预期的结局走向"
+          >
+            <TextArea
+              rows={2}
+              placeholder="例如：经历磨砺后坚定自我、最终走向悲剧"
+              maxLength={500}
+              showCount
+            />
+          </Form.Item>
+        </div>
       ),
     },
   ];

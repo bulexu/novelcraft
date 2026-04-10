@@ -24,11 +24,16 @@ import {
   ExclamationCircleOutlined,
   LoadingOutlined,
 } from '@ant-design/icons';
-import { chaptersApi } from '@/lib/api';
+import { chaptersApi, charactersApi } from '@/lib/api';
 import { ChapterNav } from '@/components/editor/ChapterNav';
 import { NovelEditor } from '@/components/editor/NovelEditor';
 import { NovelPreview } from '@/components/editor/NovelPreview';
-import type { Chapter } from '@/types';
+import CharacterSearchModal from '@/components/characters/CharacterSearchModal';
+import CharacterQuickView from '@/components/characters/CharacterQuickView';
+import AIPanel from '@/components/ai/AIPanel';
+import type { Chapter, Character } from '@/types';
+import { useCmdK } from '@/hooks/useKeyboardShortcut';
+import { useCmdShiftA } from '@/hooks/useCmdShiftA';
 
 // View modes for small screens
 type ViewMode = 'edit' | 'edit-preview' | 'preview';
@@ -65,6 +70,12 @@ export default function EditorPage() {
   // New chapter modal
   const [newChapterModalOpen, setNewChapterModalOpen] = useState(false);
   const [newChapterTitle, setNewChapterTitle] = useState('');
+
+  // Character quick view state
+  const [characters, setCharacters] = useState<Character[]>([]);
+  const [characterSearchOpen, setCharacterSearchOpen] = useState(false);
+  const [characterQuickViewOpen, setCharacterQuickViewOpen] = useState(false);
+  const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
 
   // Ref for save function to avoid stale closure in auto-save effect
   const handleSaveRef = useRef<((isAutoSave: boolean) => Promise<boolean>) | null>(null);
@@ -113,13 +124,22 @@ export default function EditorPage() {
     try {
       setLoading(true);
 
-      const [chaptersRes] = await Promise.all([
-        chaptersApi.list(projectId).catch(() => ({ items: [], total: 0, total_words: 0 })),
+      const [chaptersRes, charactersRes] = await Promise.all([
+        chaptersApi.list(projectId).catch((err) => {
+          console.error('Failed to load chapters:', err);
+          return { items: [], total: 0, total_words: 0 };
+        }),
+        charactersApi.list(projectId).catch((err) => {
+          console.error('Failed to load characters:', err);
+          message.warning('角色列表加载失败，部分功能可能受限');
+          return { items: [], total: 0 };
+        }),
       ]);
 
       if (signal?.aborted) return;
 
       setChapters(chaptersRes.items || []);
+      setCharacters(charactersRes.items || []);
 
       const chapter = await chaptersApi.get(projectId, chapterNum).catch(() => null);
       if (signal?.aborted) return;
@@ -315,6 +335,34 @@ export default function EditorPage() {
     }
   }, [chapters, projectId, newChapterTitle, router]);
 
+  // Cmd+K shortcut for character quick view (enabled in immersive mode)
+  useCmdK(() => {
+    setCharacterSearchOpen(true);
+  }, true);
+
+  // Cmd+Shift+A shortcut for AI panel toggle (enabled in immersive mode)
+  useCmdShiftA(() => {
+    setAiPanelVisible(prev => !prev);
+  }, true);
+
+  // Character selection handlers
+  const handleCharacterSelect = useCallback((character: Character) => {
+    setSelectedCharacter(character);
+    setCharacterQuickViewOpen(true);
+  }, []);
+
+  const handleViewFullProfile = useCallback((character: Character) => {
+    // Navigate to project page with character tab focused
+    router.push(`/projects/${projectId}?tab=characters&edit=${encodeURIComponent(character.name)}`);
+    setCharacterQuickViewOpen(false);
+  }, [projectId, router]);
+
+  const handleInferBehavior = useCallback((character: Character) => {
+    // TODO: Integrate with AI inference (Story 3.x)
+    message.info(`推演功能将在后续版本提供: ${character.name}`);
+    setCharacterQuickViewOpen(false);
+  }, []);
+
   // Compute dynamic class names
   const asideClassName = `h-screen bg-surface-container-low flex flex-col shrink-0 border-r border-outline-variant/10 transition-all duration-300 ${
     navCollapsed || immersiveMode ? 'w-0 overflow-hidden' : 'w-[240px]'
@@ -447,6 +495,8 @@ export default function EditorPage() {
                 content={content}
                 onChange={handleContentChange}
                 onSave={() => handleSave(false)}
+                characters={characters}
+                onCharacterSelect={handleCharacterSelect}
               />
             </div>
           )}
@@ -520,29 +570,13 @@ export default function EditorPage() {
         </div>
       )}
 
-      {/* AI Panel - user-triggered floating panel, hidden in immersive mode */}
-      {aiPanelVisible && !immersiveMode && (
-        <aside className="w-[280px] h-screen glass-panel flex flex-col border-l border-outline-variant/10 shrink-0">
-          <div className="p-4 border-b border-outline-variant/10 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <RobotOutlined className="text-primary" />
-              <span className="font-bold text-on-surface">Novella AI</span>
-            </div>
-            <Button
-              type="text"
-              size="small"
-              onClick={() => setAiPanelVisible(false)}
-            >
-              ✕
-            </Button>
-          </div>
-          <div className="flex-1 overflow-y-auto p-4">
-            <p className="text-sm text-on-surface-variant">
-              AI 辅助功能将在后续版本提供...
-            </p>
-          </div>
-        </aside>
-      )}
+      {/* AI Panel - Drawer with tabs (always rendered, controlled by visible prop) */}
+      <AIPanel
+        visible={aiPanelVisible}
+        onClose={() => setAiPanelVisible(false)}
+        projectId={projectId}
+        characters={characters}
+      />
 
       <Modal
         title="创建新章节"
@@ -562,6 +596,23 @@ export default function EditorPage() {
           onPressEnter={handleCreateChapter}
         />
       </Modal>
+
+      {/* Character Search Modal - Cmd+K trigger */}
+      <CharacterSearchModal
+        open={characterSearchOpen}
+        characters={characters}
+        onClose={() => setCharacterSearchOpen(false)}
+        onSelect={handleCharacterSelect}
+      />
+
+      {/* Character Quick View Modal */}
+      <CharacterQuickView
+        open={characterQuickViewOpen}
+        character={selectedCharacter}
+        onClose={() => setCharacterQuickViewOpen(false)}
+        onViewFullProfile={handleViewFullProfile}
+        onInferBehavior={handleInferBehavior}
+      />
     </div>
   );
 }

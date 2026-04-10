@@ -152,24 +152,10 @@ export const contextApi = {
 
 // Inference API
 export const inferenceApi = {
-  characterBehavior: (projectId: string, characterName: string, scenario: string) =>
-    fetchAPI<{
-      character_name: string;
-      scenario: string;
-      inference_result: string;
-      factors_used: {
-        personality_weight: number;
-        state_weight: number;
-        motivation_weight: number;
-        pressure_weight: number;
-      };
-      timestamp: string;
-    }>(`/projects/${projectId}/inference/character`, {
+  inferBehavior: (projectId: string, data: InferenceRequest) =>
+    fetchAPI<InferenceResponse>(`/projects/${projectId}/inference`, {
       method: 'POST',
-      body: JSON.stringify({
-        character_name: characterName,
-        scenario,
-      }),
+      body: JSON.stringify(data),
     }),
 };
 
@@ -331,4 +317,6 @@ import type {
   StyleFingerprintResponse,
   ImportStatus,
   ImportResult,
+  InferenceRequest,
+  InferenceResponse,
 } from '@/types';

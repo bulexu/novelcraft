@@ -31,6 +31,7 @@ import type {
   Simulation,
   SimulationResult,
   StyleFingerprintResponse,
+  InferenceResponse,
 } from '@/types';
 
 // Generic hook for async operations
@@ -247,21 +248,23 @@ export function useAIChat(projectId: string) {
 // AI Inference Hook
 export function useInference(projectId: string) {
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<{
-    character_name: string;
-    inference_result: string;
-    confidence: number;
-  } | null>(null);
+  const [result, setResult] = useState<InferenceResponse | null>(null);
 
-  const inferBehavior = useCallback(async (characterName: string, scenario: string) => {
+  const inferBehavior = useCallback(async (
+    characterName: string,
+    scenario: string,
+    currentState?: string,
+    externalPressure?: string
+  ) => {
     setLoading(true);
     try {
-      const response = await inferenceApi.characterBehavior(projectId, characterName, scenario);
-      setResult({
-        character_name: response.character_name,
-        inference_result: response.inference_result,
-        confidence: 85, // Default confidence
+      const response = await inferenceApi.inferBehavior(projectId, {
+        character_name: characterName,
+        scenario,
+        current_state: currentState,
+        external_pressure: externalPressure,
       });
+      setResult(response);
       return response;
     } finally {
       setLoading(false);

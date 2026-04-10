@@ -13,6 +13,15 @@ from app.services.oasis_simulation import (
     SimulationConfig,
     SimulationResult,
 )
+from app.services.inference_engine import (
+    InferenceEngine,
+    InferenceResult,
+    BehaviorChoice,
+    WEIGHT_PERSONALITY,
+    WEIGHT_CURRENT_STATE,
+    WEIGHT_MOTIVATION,
+    WEIGHT_EXTERNAL_PRESSURE,
+)
 
 router = APIRouter()
 
@@ -70,6 +79,35 @@ class SimulationListResponse(BaseModel):
     """模拟列表响应"""
     items: List[SimulationResponse]
     total: int
+
+
+# ============================================================================
+# Inference Models
+# ============================================================================
+
+class InferenceRequest(BaseModel):
+    """行为推演请求"""
+    character_name: str = Field(..., description="角色名称")
+    scenario: str = Field(..., description="场景描述")
+    current_state: Optional[str] = Field(None, description="当前状态（情绪、身体状况等）")
+    external_pressure: Optional[str] = Field(None, description="外部压力（威胁、时间限制等）")
+
+
+class BehaviorChoiceResponse(BaseModel):
+    """行为选择响应"""
+    description: str
+    probability: float
+    confidence: str
+    related_factors: List[str] = Field(default_factory=list)
+
+
+class InferenceResponse(BaseModel):
+    """行为推演响应"""
+    character_name: str
+    behaviors: List[BehaviorChoiceResponse]
+    motivation_analysis: str
+    factors_applied: Dict[str, float]
+    scenario: str
 
 
 # ============================================================================
@@ -358,3 +396,87 @@ async def predict_story(
 async def get_available_platforms():
     """获取可用平台类型"""
     return ["twitter", "reddit", "narrative"]
+
+
+# ============================================================================
+# Inference Endpoints
+# ============================================================================
+
+inference_engine = InferenceEngine()
+
+
+@router.post(
+    "/projects/{project_id}/inference",
+    response_model=InferenceResponse,
+    summary="角色行为推演",
+    description="基于多因素加权模型推演角色行为，返回前3个可能的行为选择。",
+)
+async def infer_character_behavior(
+    project_id: str,
+    request: InferenceRequest,
+):
+    """
+    基于多因素加权模型推演角色行为
+
+    权重分配：
+    - 性格特质: 40%
+    - 当前状态: 20%
+    - 内在动机: 25%
+    - 外部压力: 15%
+    """
+    from app.services.file_manager import FileManager
+    from app.schemas.file_models import CharacterState
+
+    try:
+        fm = FileManager()
+
+        # Load character
+        character = fm.read_character(project_id, request.character_name)
+        if not character:
+            raise HTTPException(
+                status_code=404,
+                detail=f"角色 '{request.character_name}' 不存在"
+            )
+
+        # Build current state if provided
+        current_state = None
+        if request.current_state:
+            current_state = CharacterState(
+                name=request.character_name,
+                mental_state=request.current_state,
+            )
+
+        # Run inference
+        result = await inference_engine.infer_behaviors(
+            project_id=project_id,
+            character=character,
+            scenario=request.scenario,
+            current_state=current_state,
+            external_pressure=request.external_pressure,
+        )
+
+        # Convert to response
+        behaviors = [
+            BehaviorChoiceResponse(
+                description=b.description,
+                probability=b.probability,
+                confidence=b.confidence,
+                related_factors=b.related_factors,
+            )
+            for b in result.behaviors
+        ]
+
+        return InferenceResponse(
+            character_name=result.character_name,
+            behaviors=behaviors,
+            motivation_analysis=result.motivation_analysis,
+            factors_applied=result.factors_applied,
+            scenario=result.scenario,
+        )
+
+    except HTTPException:
+        raise
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"推演失败: {str(e)}")

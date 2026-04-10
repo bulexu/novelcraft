@@ -23,6 +23,7 @@ export interface Character {
   background: string;
   personality_palette: PersonalityPalette;
   motivation?: MotivationSystem;
+  character_arc?: CharacterArc;
   behavior_boundary: BehaviorBoundary;
   relationships: CharacterRelation[];
   created_at: string | null;
@@ -55,6 +56,13 @@ export interface MotivationSystem {
   obsessions: string[];   // 执念
   fears: string[];         // 恐惧
   desires: string[];       // 渴望
+}
+
+export interface CharacterArc {
+  arc_type: string | null;        // 弧线类型：成长型、堕落型、救赎型、平面型
+  current_stage: string | null;   // 当前阶段
+  current_challenge: string;      // 面临挑战
+  predicted_ending: string;       // 预测结局
 }
 
 export interface Chapter {
@@ -242,4 +250,32 @@ export interface ImportResult {
   total_words: number;
   characters_detected: string[];
   status: string;
+}
+
+// Inference Types
+export interface InferenceRequest {
+  character_name: string;
+  scenario: string;
+  current_state?: string;
+  external_pressure?: string;
+}
+
+export interface InferenceResponse {
+  character_name: string;
+  behaviors: BehaviorChoice[];
+  motivation_analysis: string;
+  factors_applied: {
+    personality_weight: number;
+    current_state_weight: number;
+    motivation_weight: number;
+    external_pressure_weight: number;
+  };
+  scenario: string;
+}
+
+export interface BehaviorChoice {
+  description: string;
+  probability: number;
+  confidence: 'high' | 'medium' | 'low';
+  related_factors: string[];
 }

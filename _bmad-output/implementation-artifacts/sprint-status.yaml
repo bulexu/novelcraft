@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-04-02T16:30:00Z
-last_updated: 2026-04-08T19:15:00Z
+last_updated: 2026-04-10T15:00:00Z
 project: novelcraft
 project_key: NOKEY
 tracking_system: file-system
@@ -43,7 +43,7 @@ story_location: _bmad-output/implementation-artifacts
 
 development_status:
   # Epic 1: 项目与写作基础
-  epic-1: in-progress
+  epic-1: done
   1-1-dependency-cleanup-and-project-structure-optimization: done
   1-2-project-list-and-create-function: done
   1-3-chapter-navigation-and-three-column-layout: done
@@ -55,21 +55,22 @@ development_status:
   epic-1-retrospective: optional
 
   # Epic 2: 角色档案管理
-  epic-2: in-progress
+  epic-2: done
   2-1-character-profile-creation: done
   2-2-personality-trait-recording: done
   2-3-motivation-system-recording: done
   2-4-character-relationship-network-management: done
-  2-5-character-arc-recording: backlog
-  2-6-character-card-popup: backlog
-  2-7-character-list-and-search: backlog
+  2-5-character-arc-recording: done
+  2-6-character-card-popup: done
+  2-7-character-list-and-search: done
+  backend-character-model-fix: done
   epic-2-retrospective: optional
 
   # Epic 3: AI 辅助面板与推演系统
-  epic-3: backlog
-  3-1-ai-panel-component: backlog
-  3-2-character-behavior-inference-input: backlog
-  3-3-multi-factor-weighted-inference-engine: backlog
+  epic-3: in-progress
+  3-1-ai-panel-component: done
+  3-2-character-behavior-inference-input: done
+  3-3-multi-factor-weighted-inference-engine: review
   3-4-inference-result-display: backlog
   3-5-consistency-detection-and-reminder: backlog
   3-6-continuation-trigger: backlog

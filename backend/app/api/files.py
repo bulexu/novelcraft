@@ -14,6 +14,11 @@ from app.schemas.file_models import (
     ProjectState,
     StyleFingerprint,
     ForeshadowingItem,
+    CharacterRelation,
+    PersonalityPalette,
+    BehaviorBoundary,
+    MotivationSystem,
+    CharacterArc,
 )
 
 router = APIRouter()
@@ -61,6 +66,8 @@ class CharacterCreateRequest(BaseModel):
     arc_type: Optional[str] = None
     appearance: str = ""
     background: str = ""
+    motivation: Optional[MotivationSystem] = None
+    character_arc: Optional[CharacterArc] = None
 
 
 class CharacterUpdateRequest(BaseModel):
@@ -72,6 +79,8 @@ class CharacterUpdateRequest(BaseModel):
     arc_type: Optional[str] = None
     appearance: Optional[str] = None
     background: Optional[str] = None
+    motivation: Optional[MotivationSystem] = None
+    character_arc: Optional[CharacterArc] = None
 
 
 class ChapterCreateRequest(BaseModel):
@@ -248,6 +257,8 @@ async def create_character(
         arc_type=request.arc_type,
         appearance=request.appearance,
         background=request.background,
+        motivation=request.motivation or MotivationSystem(),
+        character_arc=request.character_arc or CharacterArc(),
     )
 
     fm.write_character(project_id, character)
@@ -300,6 +311,11 @@ async def update_character(
 
     update_data = request.model_dump(exclude_unset=True)
     for key, value in update_data.items():
+        # Convert dict to model for nested objects
+        if key == "motivation" and isinstance(value, dict):
+            value = MotivationSystem(**value)
+        elif key == "character_arc" and isinstance(value, dict):
+            value = CharacterArc(**value)
         setattr(character, key, value)
 
     fm.write_character(project_id, character)

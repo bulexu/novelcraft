@@ -22,6 +22,8 @@ from app.schemas.file_models import (
     CharacterRelation,
     PersonalityPalette,
     BehaviorBoundary,
+    MotivationSystem,
+    CharacterArc,
 )
 
 
@@ -179,6 +181,8 @@ class FileManager:
             personality_palette=self._parse_personality_palette(sections.get("性格调色盘", "")),
             behavior_boundary=self._parse_behavior_boundary(sections.get("行为禁区", "")),
             relationships=self._parse_relationships(sections.get("关系网络", "")),
+            motivation=self._parse_motivation(sections.get("动机系统", "")),
+            character_arc=self._parse_character_arc(sections.get("角色弧线", ""), frontmatter.get("arc_type")),
             created_at=self._parse_datetime(frontmatter.get("created_at")),
             updated_at=self._parse_datetime(frontmatter.get("updated_at")),
         )
@@ -475,6 +479,56 @@ class FileManager:
 
         return relations
 
+    def _parse_motivation(self, content: str) -> MotivationSystem:
+        """解析动机系统"""
+        motivation = MotivationSystem()
+        if not content:
+            return motivation
+
+        lines = content.strip().split("\n")
+        current_section = None
+
+        for line in lines:
+            if line.startswith("### 目标"):
+                current_section = "goals"
+            elif line.startswith("### 执念"):
+                current_section = "obsessions"
+            elif line.startswith("### 恐惧"):
+                current_section = "fears"
+            elif line.startswith("### 渴望"):
+                current_section = "desires"
+            elif line.startswith("- ") and current_section:
+                text = line[2:].strip()
+                if text:
+                    getattr(motivation, current_section).append(text)
+
+        return motivation
+
+    def _parse_character_arc(self, content: str, arc_type_from_frontmatter: Optional[str] = None) -> CharacterArc:
+        """解析角色弧线"""
+        arc = CharacterArc()
+
+        # 优先使用 frontmatter 中的 arc_type
+        if arc_type_from_frontmatter:
+            arc.arc_type = arc_type_from_frontmatter
+
+        if not content:
+            return arc
+
+        lines = content.strip().split("\n")
+        for line in lines:
+            line = line.strip()
+            if line.startswith("- **类型**:"):
+                arc.arc_type = line.replace("- **类型**:", "").strip()
+            elif line.startswith("- **当前阶段**:"):
+                arc.current_stage = line.replace("- **当前阶段**:", "").strip()
+            elif line.startswith("- **面临挑战**:"):
+                arc.current_challenge = line.replace("- **面临挑战**:", "").strip()
+            elif line.startswith("- **预测结局**:"):
+                arc.predicted_ending = line.replace("- **预测结局**:", "").strip()
+
+        return arc
+
     def _format_character_body(self, char: CharacterMD) -> str:
         """格式化角色档案正文"""
         sections = []
@@ -506,6 +560,32 @@ class FileManager:
             palette_section += "\n"
         sections.append(palette_section)
 
+        # 动机系统
+        motivation = char.motivation
+        if motivation.goals or motivation.obsessions or motivation.fears or motivation.desires:
+            motivation_section = "## 动机系统\n\n"
+            if motivation.goals:
+                motivation_section += "### 目标\n\n"
+                for g in motivation.goals:
+                    motivation_section += f"- {g}\n"
+                motivation_section += "\n"
+            if motivation.obsessions:
+                motivation_section += "### 执念\n\n"
+                for o in motivation.obsessions:
+                    motivation_section += f"- {o}\n"
+                motivation_section += "\n"
+            if motivation.fears:
+                motivation_section += "### 恐惧\n\n"
+                for f in motivation.fears:
+                    motivation_section += f"- {f}\n"
+                motivation_section += "\n"
+            if motivation.desires:
+                motivation_section += "### 渴望\n\n"
+                for d in motivation.desires:
+                    motivation_section += f"- {d}\n"
+                motivation_section += "\n"
+            sections.append(motivation_section)
+
         # 行为禁区
         if char.behavior_boundary.forbidden_actions:
             boundary_section = "## 行为禁区\n\n"
@@ -521,6 +601,20 @@ class FileManager:
             for r in char.relationships:
                 rel_section += f"| {r.target_name} | {r.relation_type} | {r.temperature} |\n"
             sections.append(rel_section)
+
+        # 角色弧线
+        arc = char.character_arc
+        if arc.arc_type or arc.current_stage or arc.current_challenge or arc.predicted_ending:
+            arc_section = "## 角色弧线\n\n"
+            if arc.arc_type:
+                arc_section += f"- **类型**: {arc.arc_type}\n"
+            if arc.current_stage:
+                arc_section += f"- **当前阶段**: {arc.current_stage}\n"
+            if arc.current_challenge:
+                arc_section += f"- **面临挑战**: {arc.current_challenge}\n"
+            if arc.predicted_ending:
+                arc_section += f"- **预测结局**: {arc.predicted_ending}\n"
+            sections.append(arc_section)
 
         return "\n".join(sections)
 

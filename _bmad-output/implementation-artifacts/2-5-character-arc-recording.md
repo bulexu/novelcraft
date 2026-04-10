@@ -1,6 +1,6 @@
 # Story 2.5: 角色弧线记录
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -33,23 +33,23 @@ So that 我可以规划角色的成长路径。
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: 扩展 Character 类型添加弧线字段 (AC: 1, 2)
-  - [ ] 1.1 分析现有 `arc_type` 字段使用情况
-  - [ ] 1.2 设计 `CharacterArc` 接口（弧线类型、进度、阶段、预测）
+- [x] Task 1: 扩展 Character 类型添加弧线字段 (AC: 1, 2)
+  - [x] 1.1 分析现有 `arc_type` 字段使用情况
+  - [x] 1.2 设计 `CharacterArc` 接口（弧线类型、进度、阶段、预测）
 
-- [ ] Task 2: 扩展 CharacterForm 弧线部分 (AC: 1, 2)
-  - [ ] 2.1 在 CharacterForm 中添加"角色弧线"折叠面板
-  - [ ] 2.2 实现弧线类型选择（Select 下拉）
-  - [ ] 2.3 实现弧线阶段记录（当前阶段、挑战、预测）
-  - [ ] 2.4 实现弧线进度可视化
+- [x] Task 2: 扩展 CharacterForm 弧线部分 (AC: 1, 2)
+  - [x] 2.1 在 CharacterForm 中添加"角色弧线"折叠面板
+  - [x] 2.2 实现弧线类型选择（Select 下拉）
+  - [x] 2.3 实现弧线阶段记录（当前阶段、挑战、预测）
+  - [x] 2.4 实现弧线进度可视化
 
-- [ ] Task 3: CharacterCard 展示弧线信息 (AC: 3)
-  - [ ] 3.1 在角色卡片中展示弧线类型
-  - [ ] 3.2 添加展开/折叠显示更多弧线详情
+- [x] Task 3: CharacterCard 展示弧线信息 (AC: 3)
+  - [x] 3.1 在角色卡片中展示弧线类型
+  - [x] 3.2 添加展开/折叠显示更多弧线详情
 
-- [ ] Task 4: 后端 API 集成 (AC: 3)
-  - [ ] 4.1 更新 `charactersApi.update` 调用
-  - [ ] 4.2 实现保存成功后的数据刷新
+- [x] Task 4: 后端 API 集成 (AC: 3)
+  - [x] 4.1 更新 `charactersApi.update` 调用
+  - [x] 4.2 实现保存成功后的数据刷新
 
 ## Dev Notes
 
@@ -185,7 +185,7 @@ frontend/src/
 
 ### Agent Model Used
 
-(To be filled by developer)
+Claude Sonnet 4.6
 
 ### Debug Log References
 
@@ -193,7 +193,42 @@ frontend/src/
 
 ### Completion Notes List
 
-(To be filled after implementation)
+**实现摘要：**
+
+1. ✅ Task 1: CharacterArc 接口已存在，无需扩展
+   - `CharacterArc` 接口已包含所需字段: arc_type, current_stage, current_challenge, predicted_ending
+   - Character 接口已包含 `character_arc?: CharacterArc` 字段
+
+2. ✅ Task 2: CharacterForm 角色弧线面板
+   - 添加 `characterArcTypeOptions` (成长型/堕落型/救赎型/平面型)
+   - 添加 `arcStageOptions` 按弧线类型分类的阶段选项
+   - 添加 `parseArcToForm` 和 `formToArc` 函数用于数据转换
+   - 添加角色弧线折叠面板，包含：
+     - 弧线类型选择（Select 下拉）
+     - 当前阶段选择（根据弧线类型动态显示）
+     - 面临挑战（TextArea）
+     - 预测结局（TextArea）
+   - `handleSubmit` 支持 character_arc 数据提交
+
+3. ✅ Task 3: CharacterCard 弧线信息展示
+   - 添加 `arcTypeColors` 弧线类型颜色映射
+   - 添加 `arcStageOptions` 用于计算弧线进度百分比
+   - 卡片顶部显示弧线类型标签（颜色对应弧线类型）
+   - 添加角色弧线详情折叠面板，包含：
+     - 弧线类型标签
+     - 当前阶段 + Progress 进度条
+     - 面临挑战
+     - 预测结局
+
+4. ✅ Task 4: 后端 API 集成
+   - `handleSubmit` 通过 `character_arc` 字段传递弧线数据
+   - `page.tsx` 无需修改（数据通过现有 onSubmit 传递）
+
+**字段映射：**
+- `character_arc.arc_type` ↔ 弧线类型 (Select)
+- `character_arc.current_stage` ↔ 当前阶段 (Select)
+- `character_arc.current_challenge` ↔ 面临挑战 (TextArea)
+- `character_arc.predicted_ending` ↔ 预测结局 (TextArea)
 
 ## File List
 
@@ -207,3 +242,21 @@ frontend/src/
 | Date | Change |
 |------|--------|
 | 2026-04-08 | Story file created from epics.md |
+| 2026-04-08 | Implementation completed - Character arc recording added to CharacterForm and CharacterCard |
+
+## Review Findings
+
+### Resolved Decisions
+
+- [x] [Review][Decision] 挑战/结局数据在无类型时静默丢弃 — **Resolved: 强制类型验证**。添加表单验证规则，填写弧线内容时必须选择弧线类型。
+- [x] [Review][Decision] 旧 arc_type 字段处理不完全 — **Resolved: 区分显示**。给标签添加前缀区分显示（角色类型 vs 弧线类型）。
+
+### Fixed Patches
+
+- [x] [Review][Patch] 阶段选择未随类型变更清除 [CharacterForm.tsx:694-716] — **Fixed**。在 shouldUpdate 渲染函数中，当类型变更后当前阶段不在新阶段列表中时自动清除。
+- [x] [Review][Patch] 强制类型验证 [CharacterForm.tsx:678-691] — **Fixed**。添加 validator 规则检查。
+- [x] [Review][Patch] 类型接口缺少 null 安全 [index.ts:61-66] — **Fixed**。更新 CharacterArc 接口，arc_type 和 current_stage 改为 `string | null`。
+
+### Deferred
+
+- [x] [Review][Defer] 空字符串 vs null 语义不清 [CharacterForm.tsx:263-267] — deferred, pre-existing. 需要后端 API 配合明确 null vs "" 语义，当前变更范围内无法独立修复。

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Card, Tag, Tooltip, Popconfirm, Collapse } from 'antd';
+import { Card, Tag, Tooltip, Popconfirm, Collapse, Progress } from 'antd';
 import { UserOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { Character } from '@/types';
 
@@ -116,6 +116,97 @@ export default function CharacterCard({ character, onEdit, onDelete }: Character
   const relationships = character.relationships || [];
   const hasRelationships = relationships.length > 0;
 
+  // 解析角色弧线
+  const characterArc = character.character_arc;
+  const hasArc = !!characterArc?.arc_type;
+
+  // 弧线阶段映射和进度计算
+  const arcStageOptions: Record<string, { value: string; label: string; percent: number }[]> = {
+    '成长型': [
+      { value: '起点', label: '起点', percent: 0 },
+      { value: '觉醒', label: '觉醒', percent: 17 },
+      { value: '考验', label: '考验', percent: 33 },
+      { value: '低谷', label: '低谷', percent: 50 },
+      { value: '突破', label: '突破', percent: 67 },
+      { value: '巅峰', label: '巅峰', percent: 83 },
+      { value: '结局', label: '结局', percent: 100 },
+    ],
+    '堕落型': [
+      { value: '高点', label: '高点', percent: 0 },
+      { value: '诱惑', label: '诱惑', percent: 20 },
+      { value: '妥协', label: '妥协', percent: 40 },
+      { value: '沉沦', label: '沉沦', percent: 60 },
+      { value: '触底', label: '触底', percent: 80 },
+      { value: '结局', label: '结局', percent: 100 },
+    ],
+    '救赎型': [
+      { value: '迷失', label: '迷失', percent: 0 },
+      { value: '挣扎', label: '挣扎', percent: 20 },
+      { value: '救赎机会', label: '救赎机会', percent: 40 },
+      { value: '考验', label: '考验', percent: 60 },
+      { value: '觉醒', label: '觉醒', percent: 80 },
+      { value: '结局', label: '结局', percent: 100 },
+    ],
+    '平面型': [
+      { value: '稳定', label: '稳定', percent: 100 },
+    ],
+  };
+
+  const arcStages = characterArc?.arc_type && arcStageOptions[characterArc.arc_type]
+    ? arcStageOptions[characterArc.arc_type]
+    : [];
+  const currentStageIndex = arcStages.findIndex(s => s.value === characterArc?.current_stage);
+  const arcProgress = currentStageIndex >= 0 ? arcStages[currentStageIndex].percent : undefined;
+  const isUnknownStage = currentStageIndex < 0 && characterArc?.current_stage;
+
+  // 弧线弧型颜色映射
+  const arcTypeColors: Record<string, string> = {
+    '成长型': 'green',
+    '堕落型': 'red',
+    '救赎型': 'blue',
+    '平面型': 'gray',
+  };
+
+  // 角色弧线详情面板
+  const arcDetails = hasArc ? (
+    <div className="text-left text-sm">
+      <div className="mb-2">
+        <span className="text-on-surface-variant mr-1">弧线类型：</span>
+        <Tag color={arcTypeColors[characterArc?.arc_type || ''] || 'default'}>
+          {characterArc?.arc_type}
+        </Tag>
+      </div>
+      {characterArc?.current_stage && (
+        <div className="mb-2">
+          <span className="text-on-surface-variant mr-1">当前阶段：</span>
+          <span className="text-on-surface">
+            {isUnknownStage ? `${characterArc.current_stage}（未知阶段）` : characterArc.current_stage}
+          </span>
+          {arcProgress !== undefined && (
+            <Progress
+              percent={arcProgress}
+              size="small"
+              className="mt-1"
+              strokeColor={arcTypeColors[characterArc?.arc_type || ''] || 'blue'}
+            />
+          )}
+        </div>
+      )}
+      {characterArc?.current_challenge && (
+        <div className="mb-2">
+          <span className="text-on-surface-variant">面临挑战：</span>
+          <span className="text-on-surface">{characterArc.current_challenge}</span>
+        </div>
+      )}
+      {characterArc?.predicted_ending && (
+        <div>
+          <span className="text-on-surface-variant">预测结局：</span>
+          <span className="text-on-surface">{characterArc.predicted_ending}</span>
+        </div>
+      )}
+    </div>
+  ) : null;
+
   // 关系温度颜色映射
   const temperatureColors: Record<string, string> = {
     '热烈': 'red',
@@ -172,6 +263,13 @@ export default function CharacterCard({ character, onEdit, onDelete }: Character
       children: relationshipDetails,
     });
   }
+  if (arcDetails) {
+    collapseItems.push({
+      key: 'character_arc',
+      label: <span className="text-xs text-on-surface-variant">角色弧线</span>,
+      children: arcDetails,
+    });
+  }
 
   return (
     <Card
@@ -204,7 +302,14 @@ export default function CharacterCard({ character, onEdit, onDelete }: Character
           </p>
         )}
         <div className="mb-2">
-          <Tag color="blue">{character.arc_type || '角色'}</Tag>
+          {character.arc_type && (
+            <Tag color="blue">角色：{character.arc_type}</Tag>
+          )}
+          {character.character_arc?.arc_type && (
+            <Tag color={arcTypeColors[character.character_arc.arc_type] || 'default'}>
+              弧线：{character.character_arc.arc_type}
+            </Tag>
+          )}
           {character.gender && (
             <Tag color="cyan">{character.gender}</Tag>
           )}
@@ -222,6 +327,15 @@ export default function CharacterCard({ character, onEdit, onDelete }: Character
             {mainTraits.length > 3 && (
               <span className="text-xs text-on-surface-variant">+{mainTraits.length - 3}</span>
             )}
+          </div>
+        )}
+
+        {/* 状态展示 */}
+        {character.status && (
+          <div className="mb-2">
+            <Tag color={character.status === 'alive' || character.status === '活跃' ? 'green' : character.status === 'dead' || character.status === '死亡' ? 'red' : 'default'}>
+              {character.status === 'alive' ? '活跃' : character.status === 'dead' ? '死亡' : character.status}
+            </Tag>
           </div>
         )}
 
